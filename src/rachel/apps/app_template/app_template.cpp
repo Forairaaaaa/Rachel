@@ -29,7 +29,6 @@ void AppTemplate::onResume()
 
     HAL::GetCanvas()->setTextScroll(true);
     HAL::GetCanvas()->setCursor(0, 0);
-    HAL::GetCanvas()->setTextSize(0.5);
 }
 
 

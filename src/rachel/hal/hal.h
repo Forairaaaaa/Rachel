@@ -127,43 +127,50 @@ public:
      */
     static LGFX_Sprite* GetCanvas() { return Get()->_canvas; }
 
-
-    /**
-     * @brief APIs
-     * 
-     */
 public:
     /**
-     * @brief Push framebuffer 
+     * @brief System APIs
      * 
      */
-    static void CanvasUpdate() { Get()->canvasUpdate(); }
-    virtual void canvasUpdate() { GetCanvas()->pushSprite(0, 0); }
-    
-
     static void Delay(unsigned long milliseconds) { Get()->delay(milliseconds); }
-    virtual void delay(unsigned long milliseconds) {}
+    virtual void delay(unsigned long milliseconds) { lgfx::delay(milliseconds); }
     
-
     static unsigned long Millis() { return Get()->millis(); }
-    virtual unsigned long millis() { return 0; }
-    
-
-    static void LoadSystemFont24() { Get()->loadSystemFont24(); }
-    virtual void loadSystemFont24() {}
-    
-    
-    /**
-     * @brief Get the Button state 
-     * 
-     * @param button 
-     * @return true Pressing 
-     * @return false Released 
-     */
-    static bool GetButton(GAMEPAD::GamePadButton_t button) { return Get()->getButton(button); }
-    virtual bool getButton(GAMEPAD::GamePadButton_t button) { return false; }
+    virtual unsigned long millis() { return lgfx::millis(); }
 
     static void PowerOff() { Get()->powerOff(); }
     virtual void powerOff() {}
 
+
+    /**
+     * @brief Display APIs 
+     * 
+     */
+    // Push frame buffer 
+    static void CanvasUpdate() { Get()->canvasUpdate(); }
+    virtual void canvasUpdate() { GetCanvas()->pushSprite(0, 0); }
+
+    static void RenderFpsPanel() { Get()->renderFpsPanel(); }
+    virtual void renderFpsPanel();
+
+    // Pop error message and wait reboot 
+    static void PopFatalError(std::string& msg) { Get()->popFatalError(msg); }
+    virtual void popFatalError(std::string& msg) {}
+    
+
+    /**
+     * @brief File system APIs 
+     * 
+     */
+    static void LoadSystemFont24() { Get()->loadSystemFont24(); }
+    virtual void loadSystemFont24() {}
+
+
+    /**
+     * @brief Gamepad APIs 
+     * 
+     */
+    // Get button state, @true: Pressing @false: Released 
+    static bool GetButton(GAMEPAD::GamePadButton_t button) { return Get()->getButton(button); }
+    virtual bool getButton(GAMEPAD::GamePadButton_t button) { return false; }
 };

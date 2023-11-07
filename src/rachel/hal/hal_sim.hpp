@@ -47,18 +47,6 @@ class HAL_Simulator : public HAL
     }
 
 
-    void delay(unsigned long milliseconds) override
-    {
-        lgfx::delay(milliseconds);
-    }
-
-
-    unsigned long millis() override
-    {
-        return lgfx::millis();
-    }
-
-
     void loadSystemFont24() override
     {
         // https://github.com/Bodmer/TFT_eSPI/tree/master/Tools/Create_Smooth_Font/Create_font

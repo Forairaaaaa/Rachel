@@ -62,3 +62,14 @@ void HAL::Destroy()
     _hal = nullptr;
 }
 
+
+void HAL::renderFpsPanel()
+{
+    static unsigned long time_count = 0;
+
+    _canvas->setTextColor(TFT_WHITE, TFT_BLACK);
+    _canvas->setTextSize(2);
+    _canvas->drawNumber(1000 / (millis() - time_count), 0, 0, &fonts::Font0);
+
+    time_count = millis();
+}

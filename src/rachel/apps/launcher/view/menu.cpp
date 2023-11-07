@@ -152,8 +152,10 @@ void Launcher::_update_menu()
 
         // Update menu
         _data.menu->update(HAL::Millis());
+        
 
         // Push frame buffer 
+        // HAL::RenderFpsPanel();
         HAL::CanvasUpdate();
 
         _data.menu_update_count = HAL::Millis();

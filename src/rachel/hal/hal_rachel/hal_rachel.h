@@ -24,9 +24,6 @@ private:
 public:
     std::string type() override { return "Rachel"; }
     void init() override;
-    inline void canvasUpdate() override { GetCanvas()->pushSprite(0, 0); }
-    inline void delay(unsigned long milliseconds) override { lgfx::delay(milliseconds); }
-    inline unsigned long millis() override { return lgfx::millis(); }
     void loadSystemFont24() override;
     bool getButton(GAMEPAD::GamePadButton_t button) override;
     void powerOff() override;
