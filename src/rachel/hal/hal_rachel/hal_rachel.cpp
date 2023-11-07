@@ -20,5 +20,7 @@ void HAL_Rachel::init()
     _disp_init();
     _fs_init();
     _gamepad_init();
+    _i2c_init();
+    _rtc_init();
 }
 
