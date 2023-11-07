@@ -13,14 +13,14 @@
 #include <Arduino.h>
 
 
-#define LCD_MOSI_PIN 35
+#define LCD_MOSI_PIN 40
 #define LCD_MISO_PIN -1
-#define LCD_SCLK_PIN 36
-#define LCD_DC_PIN   34
-#define LCD_CS_PIN   37
-#define LCD_RST_PIN  33
+#define LCD_SCLK_PIN 41
+#define LCD_DC_PIN   42
+#define LCD_CS_PIN   44
+#define LCD_RST_PIN  12
 #define LCD_BUSY_PIN -1
-#define LCD_BL_PIN   38
+#define LCD_BL_PIN   11
 
 
 class LGFX_Rachel : public lgfx::LGFX_Device 
