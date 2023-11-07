@@ -11,16 +11,7 @@
 #include <mooncake.h>
 #include "../hal_rachel.h"
 #include <Arduino.h>
-
-
-#define LCD_MOSI_PIN 40
-#define LCD_MISO_PIN -1
-#define LCD_SCLK_PIN 41
-#define LCD_DC_PIN   42
-#define LCD_CS_PIN   44
-#define LCD_RST_PIN  12
-#define LCD_BUSY_PIN -1
-#define LCD_BL_PIN   11
+#include "../hal_config.h"
 
 
 class LGFX_Rachel : public lgfx::LGFX_Device 
@@ -34,10 +25,10 @@ public:
         {
             auto cfg = _bus_instance.config();
 
-            cfg.pin_mosi   = LCD_MOSI_PIN;
-            cfg.pin_miso   = LCD_MISO_PIN;
-            cfg.pin_sclk   = LCD_SCLK_PIN;
-            cfg.pin_dc     = LCD_DC_PIN;
+            cfg.pin_mosi   = HAL_PIN_LCD_MOSI;
+            cfg.pin_miso   = HAL_PIN_LCD_MISO;
+            cfg.pin_sclk   = HAL_PIN_LCD_SCLK;
+            cfg.pin_dc     = HAL_PIN_LCD_DC;
             cfg.freq_write = 80000000;
 
             _bus_instance.config(cfg);
@@ -47,20 +38,21 @@ public:
             auto cfg = _panel_instance.config();
 
             cfg.invert       = true;
-            cfg.pin_cs       = LCD_CS_PIN;
-            cfg.pin_rst      = LCD_RST_PIN;
-            cfg.pin_busy     = LCD_BUSY_PIN;
+            cfg.pin_cs       = HAL_PIN_LCD_CS;
+            cfg.pin_rst      = HAL_PIN_LCD_RST;
+            cfg.pin_busy     = HAL_PIN_LCD_BUSY;
             cfg.panel_width  = 240;
             cfg.panel_height = 240;
             cfg.offset_x     = 0;
             cfg.offset_y     = 0;
+            cfg.bus_shared   = true;
 
             _panel_instance.config(cfg);
         }
         {
             auto cfg = _light_instance.config();
 
-            cfg.pin_bl = LCD_BL_PIN;
+            cfg.pin_bl = HAL_PIN_LCD_BL;
             cfg.invert = false;
             cfg.freq   = 44100;
             cfg.pwm_channel = 7;

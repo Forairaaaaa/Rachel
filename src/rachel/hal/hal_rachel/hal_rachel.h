@@ -9,16 +9,17 @@
  * 
  */
 #pragma once
-#ifdef ESP_PLATFORM
 #include "../hal.h"
 
 
 class HAL_Rachel : public HAL
 {
 private:
+    void _power_init();
     void _disp_init();
     void _fs_init();
     void _gamepad_init();
+    std::array<uint8_t, 11> _gamepad_key_map;
 
 public:
     std::string type() override { return "Rachel"; }
@@ -28,5 +29,5 @@ public:
     inline unsigned long millis() override { return lgfx::millis(); }
     void loadSystemFont24() override;
     bool getButton(GAMEPAD::GamePadButton_t button) override;
+    void powerOff() override;
 };
-#endif

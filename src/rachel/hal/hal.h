@@ -162,4 +162,8 @@ public:
      */
     static bool GetButton(GAMEPAD::GamePadButton_t button) { return Get()->getButton(button); }
     virtual bool getButton(GAMEPAD::GamePadButton_t button) { return false; }
+
+    static void PowerOff() { Get()->powerOff(); }
+    virtual void powerOff() {}
+
 };
