@@ -26,10 +26,11 @@ public:
             auto cfg = _bus_instance.config();
 
             cfg.pin_mosi   = HAL_PIN_LCD_MOSI;
-            cfg.pin_miso   = HAL_PIN_LCD_MISO;
+            cfg.pin_miso   = HAL_PIN_SD_MISO;
             cfg.pin_sclk   = HAL_PIN_LCD_SCLK;
             cfg.pin_dc     = HAL_PIN_LCD_DC;
             cfg.freq_write = 80000000;
+            cfg.spi_3wire  = false;
 
             _bus_instance.config(cfg);
             _panel_instance.setBus(&_bus_instance);

@@ -29,11 +29,12 @@ private:
     void _power_init();
     void _disp_init();
     void _fs_init();
-    void _gamepad_init();
     void _i2c_init();
     void _rtc_init();
     void _imu_init();
     void _spk_init();
+    void _sdcard_init();
+    void _gamepad_init();
 
 public:
     HAL_Rachel() :
@@ -57,11 +58,12 @@ public:
         _power_init();
         _disp_init();
         _fs_init();
-        _gamepad_init();
         _i2c_init();
         _rtc_init();
         _imu_init();
         _spk_init();
+        _sdcard_init();
+        _gamepad_init();
     }
 
     void loadSystemFont24() override;

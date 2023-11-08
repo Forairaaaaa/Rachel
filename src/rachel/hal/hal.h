@@ -109,7 +109,8 @@ public:
 public:
     HAL() :
         _display(nullptr),
-        _canvas(nullptr)
+        _canvas(nullptr),
+        _is_sd_card_ready(false)
         {}
     virtual ~HAL() {}
     virtual std::string type() { return "Base"; }
@@ -124,6 +125,7 @@ protected:
     LGFX_Sprite* _canvas;
     tm _date_time;
     IMU::ImuData_t _imu_data;
+    bool _is_sd_card_ready;
 
 
     /**
@@ -179,6 +181,9 @@ public:
 
     static void SetBeepVolume(uint8_t volume) { Get()->setBeepVolume(volume); }
     virtual void setBeepVolume(uint8_t volume) {}
+
+    static bool CheckSdCard() { return Get()->checkSdCard(); }
+    virtual bool checkSdCard() { return _is_sd_card_ready; }
 
 
     /**
