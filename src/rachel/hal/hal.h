@@ -9,14 +9,18 @@
  * 
  */
 #pragma once
-#include <LovyanGFX.hpp>
 #ifndef ESP_PLATFORM
+#define LGFX_USE_V1
+#include <LGFX_AUTODETECT.hpp>
+#include <LovyanGFX.hpp>
 #include "lgfx/v1/LGFXBase.hpp"
 #include "lgfx/v1/LGFX_Sprite.hpp"
 #include "lgfx/v1_autodetect/LGFX_AutoDetect_sdl.hpp"
 #include <cstdint>
 #include <iostream>
 #include <string>
+#else
+#include <LovyanGFX.hpp>
 #endif
 
 

@@ -17,7 +17,7 @@
 #include <LovyanGFX.hpp>
 #include "lgfx/v1/lgfx_fonts.hpp"
 #include "../hal.h"
-#include "../../performance_window.hpp"
+#include "../../../performance_window.hpp"
 
 
 // PerformanceWindow _pw;
@@ -37,6 +37,9 @@ class HAL_Simulator : public HAL
         // Canvas
         _canvas = new LGFX_Sprite(_display);
         _canvas->createSprite(_display->width(), _display->height());
+
+        // // Some pc window pop up slower? 
+        // lgfx::delay(1500);
     }
 
 
