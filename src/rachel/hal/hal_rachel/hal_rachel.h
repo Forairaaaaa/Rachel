@@ -35,6 +35,7 @@ private:
     void _spk_init();
     void _sdcard_init();
     void _gamepad_init();
+    void _adjust_sys_time();
 
 public:
     HAL_Rachel() :
@@ -69,8 +70,7 @@ public:
     void loadSystemFont24() override;
     bool getButton(GAMEPAD::GamePadButton_t button) override;
     void powerOff() override;
-    void setDateTime(tm dateTime) override;
-    tm& dateTime() override;
+    void setSystemTime(tm dateTime) override;
     void updateImuData() override;
     void beep(float frequency, uint32_t duration) override;
     void setBeepVolume(uint8_t volume) override;

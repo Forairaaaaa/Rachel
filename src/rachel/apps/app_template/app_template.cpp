@@ -45,8 +45,8 @@ void AppTemplate::onRunning()
         _data.count = HAL::Millis();
     }
 
-    // Press B back to launcher 
-    if (HAL::GetButton(GAMEPAD::BTN_B))
+    // Press Select to quit  
+    if (HAL::GetButton(GAMEPAD::BTN_SELECT))
         destroyApp();
 }
 

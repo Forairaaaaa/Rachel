@@ -161,11 +161,8 @@ public:
     static void PowerOff() { Get()->powerOff(); }
     virtual void powerOff() {}
 
-    static tm& DateTime() { return Get()->dateTime(); }
-    virtual tm& dateTime() { return _date_time; }
-
-    static void SetDateTime(tm dateTime) { return Get()->setDateTime(dateTime); }
-    virtual void setDateTime(tm dateTime) {}
+    static void SetSystemTime(tm dateTime) { return Get()->setSystemTime(dateTime); }
+    virtual void setSystemTime(tm dateTime) {}
 
     static void UpdateImuData() { Get()->updateImuData(); }
     virtual void updateImuData() {}
