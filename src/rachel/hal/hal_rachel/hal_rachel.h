@@ -11,6 +11,7 @@
 #pragma once
 #include "../hal.h"
 #include "i2c/I2C_Class.hpp"
+#include "rtc/RTC8563_Class.hpp"
 
 
 class HAL_Rachel : public HAL
@@ -18,6 +19,7 @@ class HAL_Rachel : public HAL
 private:
     std::array<uint8_t, 11> _gamepad_key_map;
     m5::I2C_Class* _i2c_bus;
+    m5::RTC8563_Class* _rtc;
 
 private:
     void _power_init();
@@ -29,7 +31,8 @@ private:
 
 public:
     HAL_Rachel() :
-        _i2c_bus(nullptr)
+        _i2c_bus(nullptr),
+        _rtc(nullptr)
         {}
 
     std::string type() override { return "Rachel"; }
@@ -37,4 +40,6 @@ public:
     void loadSystemFont24() override;
     bool getButton(GAMEPAD::GamePadButton_t button) override;
     void powerOff() override;
+    void setDateTime(tm dateTime) override;
+    tm& dateTime() override;
 };

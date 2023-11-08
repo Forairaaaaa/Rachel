@@ -90,8 +90,10 @@ void Launcher::_update_clock(bool updateNow)
     if ((HAL::Millis() - _data.clock_update_count) > _data.clock_update_interval || updateNow)
     {
         // Update clock  
-        // TODO
-        _data.clock = "22:33";
+        char string_buffer[10];
+        auto time = HAL::DateTime();
+        snprintf(string_buffer, 10, "%2d:%2d", time.tm_hour, time.tm_min);
+        _data.clock = string_buffer;
 
         _data.clock_update_count = HAL::Millis();
     }

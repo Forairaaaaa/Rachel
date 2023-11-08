@@ -93,7 +93,8 @@ public:
      */
 public:
     HAL() :
-        _display(nullptr)
+        _display(nullptr),
+        _canvas(nullptr)
         {}
     virtual ~HAL() {}
     virtual std::string type() { return "Base"; }
@@ -106,6 +107,7 @@ public:
 protected:
     LGFX_Device* _display;
     LGFX_Sprite* _canvas;
+    tm _date_time;
 
 
     /**
@@ -140,6 +142,12 @@ public:
 
     static void PowerOff() { Get()->powerOff(); }
     virtual void powerOff() {}
+
+    static tm& DateTime() { return Get()->dateTime(); }
+    virtual tm& dateTime() { return _date_time; }
+
+    static void SetDateTime(tm dateTime) { return Get()->setDateTime(dateTime); }
+    virtual void setDateTime(tm dateTime) {}
 
 
     /**
