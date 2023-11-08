@@ -1,5 +1,5 @@
 /**
- * @file hal_sim.hpp
+ * @file hal_simulator.hpp
  * @author Forairaaaaa
  * @brief 
  * @version 0.1
@@ -16,7 +16,7 @@
 #include <LGFX_AUTODETECT.hpp>
 #include <LovyanGFX.hpp>
 #include "lgfx/v1/lgfx_fonts.hpp"
-#include "hal.h"
+#include "../hal.h"
 #include "../../performance_window.hpp"
 
 

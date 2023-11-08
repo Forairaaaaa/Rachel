@@ -12,7 +12,7 @@
 #include <mooncake.h>
 #include "hal/hal.h"
 #ifndef ESP_PLATFORM
-#include "hal/hal_sim.hpp"
+#include "hal/hal_simulator/hal_simulator.hpp"
 #else
 #include "hal/hal_rachel/hal_rachel.h"
 #endif
@@ -67,7 +67,6 @@ void RACHEL::Destroy()
     // Free 
     delete _mooncake;
     HAL::Destroy();
-
     spdlog::warn("Rachel destroy");
 }
 
