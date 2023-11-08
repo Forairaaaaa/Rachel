@@ -48,3 +48,15 @@ void HAL_Rachel::_spk_init()
     // while (_spk->isPlaying())
     //     delay(20);
 }
+
+
+void HAL_Rachel::beep(float frequency, uint32_t duration)
+{
+    _spk->tone(frequency, duration);
+}
+
+
+void HAL_Rachel::setBeepVolume(uint8_t volume)
+{
+    _spk->setVolume(volume);
+}

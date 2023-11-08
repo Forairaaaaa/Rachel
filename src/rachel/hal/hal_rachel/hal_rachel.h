@@ -70,4 +70,6 @@ public:
     void setDateTime(tm dateTime) override;
     tm& dateTime() override;
     void updateImuData() override;
+    void beep(float frequency, uint32_t duration) override;
+    void setBeepVolume(uint8_t volume) override;
 };

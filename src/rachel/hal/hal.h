@@ -171,6 +171,15 @@ public:
     static IMU::ImuData_t& GetImuData() { return Get()->getImuData(); }
     IMU::ImuData_t& getImuData() { return _imu_data; }
 
+    static void Beep(float frequency, uint32_t duration = 4294967295U) { Get()->beep(frequency, duration); }
+    virtual void beep(float frequency, uint32_t duration) {}
+
+    static void BeepStop() { Get()->beepStop(); }
+    virtual void beepStop() {}
+
+    static void SetBeepVolume(uint8_t volume) { Get()->setBeepVolume(volume); }
+    virtual void setBeepVolume(uint8_t volume) {}
+
 
     /**
      * @brief Display APIs 
