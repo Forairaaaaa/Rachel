@@ -1,7 +1,7 @@
 /**
  * @file hal_rtc.cpp
  * @author Forairaaaaa
- * @brief 
+ * @brief Ref: https://github.com/m5stack/M5Unified
  * @version 0.1
  * @date 2023-11-07
  * 
