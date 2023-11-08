@@ -13,6 +13,7 @@
 #include "utils/m5unified/I2C_Class.hpp"
 #include "utils/m5unified/RTC8563_Class.hpp"
 #include "utils/m5unified/IMU_Class.hpp"
+#include "utils/m5unified/Speaker_Class.hpp"
 
 
 class HAL_Rachel : public HAL
@@ -22,6 +23,7 @@ private:
     m5::I2C_Class* _i2c_bus;
     m5::RTC8563_Class* _rtc;
     m5::IMU_Class* _imu;
+    m5::Speaker_Class* _spk;
 
 private:
     void _power_init();
@@ -31,18 +33,21 @@ private:
     void _i2c_init();
     void _rtc_init();
     void _imu_init();
+    void _spk_init();
 
 public:
     HAL_Rachel() :
         _i2c_bus(nullptr),
         _rtc(nullptr),
-        _imu(nullptr)
+        _imu(nullptr),
+        _spk(nullptr)
         {}
     ~HAL_Rachel()
     {
         delete _rtc;
         delete _imu;
         delete _i2c_bus;
+        delete _spk;
     }
 
     inline std::string type() override { return "Rachel"; }
@@ -56,6 +61,7 @@ public:
         _i2c_init();
         _rtc_init();
         _imu_init();
+        _spk_init();
     }
 
     void loadSystemFont24() override;
