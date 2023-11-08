@@ -34,3 +34,17 @@ void HAL_Rachel::_imu_init()
     //     delay(50);
     // }
 }
+
+
+void HAL_Rachel::updateImuData()
+{
+    auto imu_update = _imu->update();
+    if (imu_update)
+    {
+        // Obtain data on the current value of the IMU.
+        auto data = _imu->getImuData();
+        _imu_data.accelX = data.accel.x;
+        _imu_data.accelY = data.accel.y;
+        _imu_data.accelX = data.accel.z;
+    }
+}

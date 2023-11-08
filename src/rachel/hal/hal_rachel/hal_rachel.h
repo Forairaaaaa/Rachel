@@ -69,4 +69,5 @@ public:
     void powerOff() override;
     void setDateTime(tm dateTime) override;
     tm& dateTime() override;
+    void updateImuData() override;
 };

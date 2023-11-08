@@ -44,6 +44,21 @@ namespace GAMEPAD
 
 
 /**
+ * @brief IMU data 
+ * 
+ */
+namespace IMU
+{
+    struct ImuData_t
+    {
+        float accelX;
+        float accelY;
+        float accelZ;
+    };
+}
+
+
+/**
  * @brief Singleton like pattern to simplify hal's getter 
  * 1) Inherit and override methods to create a specific hal 
  * 2) Use HAL::Inject() to inject your hal
@@ -108,6 +123,7 @@ protected:
     LGFX_Device* _display;
     LGFX_Sprite* _canvas;
     tm _date_time;
+    IMU::ImuData_t _imu_data;
 
 
     /**
@@ -148,6 +164,12 @@ public:
 
     static void SetDateTime(tm dateTime) { return Get()->setDateTime(dateTime); }
     virtual void setDateTime(tm dateTime) {}
+
+    static void UpdateImuData() { Get()->updateImuData(); }
+    virtual void updateImuData() {}
+
+    static IMU::ImuData_t& GetImuData() { return Get()->getImuData(); }
+    IMU::ImuData_t& getImuData() { return _imu_data; }
 
 
     /**
