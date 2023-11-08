@@ -45,6 +45,6 @@ void HAL_Rachel::updateImuData()
         auto data = _imu->getImuData();
         _imu_data.accelX = data.accel.x;
         _imu_data.accelY = data.accel.y;
-        _imu_data.accelX = data.accel.z;
+        _imu_data.accelZ = data.accel.z;
     }
 }

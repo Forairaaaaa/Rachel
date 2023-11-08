@@ -34,7 +34,7 @@ void AppTemplate::onResume()
 
 void AppTemplate::onRunning()
 {
-    // Make some noise every seconds 
+    // Every seconds 
     if ((HAL::Millis() - _data.count) > 1000)
     {
         spdlog::info("{}: Hi", getAppName());
