@@ -4,8 +4,7 @@
 #ifndef __M5_IMU_CLASS_H__
 #define __M5_IMU_CLASS_H__
 
-// #include "I2C_Class.hpp"
-#include "../i2c/I2C_Class.hpp"
+#include "I2C_Class.hpp"
 #include "imu/IMU_Base.hpp"
 #include <memory>
 

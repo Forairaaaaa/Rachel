@@ -10,9 +10,9 @@
  */
 #pragma once
 #include "../hal.h"
-#include "i2c/I2C_Class.hpp"
-#include "rtc/RTC8563_Class.hpp"
-#include "imu/IMU_Class.hpp"
+#include "utils/m5unified/I2C_Class.hpp"
+#include "utils/m5unified/RTC8563_Class.hpp"
+#include "utils/m5unified/IMU_Class.hpp"
 
 
 class HAL_Rachel : public HAL

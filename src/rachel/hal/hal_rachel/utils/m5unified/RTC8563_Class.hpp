@@ -6,8 +6,7 @@
 
 // #include "m5unified_common.h"
 
-// #include "I2C_Class.hpp"
-#include "../i2c/I2C_Class.hpp"
+#include "I2C_Class.hpp"
 
 #if __has_include(<sys/time.h>)
 #include <sys/time.h>
