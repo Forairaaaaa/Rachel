@@ -32,6 +32,7 @@ namespace MOONCAKE
                 std::string clock;
                 uint32_t clock_update_count = 0;
                 const uint32_t clock_update_interval = 1000;
+                char string_buffer[10];
 
                 // Menu
                 SMOOTH_MENU::Simple_Menu* menu = nullptr;

@@ -26,4 +26,11 @@ void HAL_Rachel::_power_init()
 void HAL_Rachel::powerOff()
 {
     digitalWrite(HAL_PIN_PWR_HOLD, 0);
+    delay(1000);
+}
+
+
+void HAL_Rachel::reboot()
+{
+    esp_restart();
 }

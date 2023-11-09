@@ -39,8 +39,7 @@ void Launcher::onResume()
     spdlog::info("{} onResume", getAppName());
 
     // Load resources 
-    HAL::LoadSystemFont24();
-    HAL::GetCanvas()->setTextSize(1);
+    HAL::LoadLauncherFont24();
     HAL::GetCanvas()->setTextScroll(false);
 
     _update_clock(true);
@@ -65,6 +64,8 @@ void Launcher::onRunningBG()
         mcAppGetFramework()->startApp(this);
 
         // Play app close anim 
+        HAL::LoadLauncherFont24();
+        _update_clock(true);
         _play_app_anim(false);
     }
 }
@@ -90,13 +91,9 @@ void Launcher::_update_clock(bool updateNow)
     if ((HAL::Millis() - _data.clock_update_count) > _data.clock_update_interval || updateNow)
     {
         // Update clock  
-        static char string_buffer[10];
-        static time_t sys_time;
-
-        time(&sys_time);
-        strftime(string_buffer, 10, "%H:%M", localtime(&sys_time));
-        _data.clock = string_buffer;
-
+        strftime(_data.string_buffer, 10, "%H:%M", HAL::GetLocalTime());
+        _data.clock = _data.string_buffer;
+        
         _data.clock_update_count = HAL::Millis();
     }
 }

@@ -58,16 +58,20 @@ public:
     {
         _power_init();
         _disp_init();
-        _fs_init();
+        _gamepad_init();
+        _spk_init();
         _i2c_init();
         _rtc_init();
         _imu_init();
-        _spk_init();
+        _fs_init();
         _sdcard_init();
-        _gamepad_init();
     }
 
-    void loadSystemFont24() override;
+    void reboot() override;
+    void loadTextFont24() override;
+    void loadTextFont16() override;
+    void loadLauncherFont24() override;
+
     bool getButton(GAMEPAD::GamePadButton_t button) override;
     void powerOff() override;
     void setSystemTime(tm dateTime) override;

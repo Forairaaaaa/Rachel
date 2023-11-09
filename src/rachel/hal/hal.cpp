@@ -73,3 +73,48 @@ void HAL::renderFpsPanel()
 
     time_count = millis();
 }
+
+
+void HAL::popFatalError(std::string msg)
+{
+    static const uint32_t bg_color = 0x0078d7;
+
+    printf("????\n");
+
+    loadTextFont24();
+
+
+    printf("????\n");
+    
+    _canvas->setTextColor(TFT_WHITE, bg_color);
+    _canvas->fillScreen(bg_color);
+    
+    _canvas->setCursor(8, 15);
+    _canvas->setTextSize(5);
+    _canvas->printf(":(");
+
+    _canvas->setCursor(0, 155);
+    _canvas->setTextSize(1);
+    _canvas->printf("   Fatal Error");
+    _canvas->setCursor(0, 185);
+    _canvas->printf("   %s", msg.c_str());
+
+    _canvas->pushSprite(0, 0);
+
+
+    // Wait reboot or power off 
+    while (1)
+    {
+        delay(100);
+        if (getButton(GAMEPAD::BTN_A))
+            powerOff();
+    }
+}
+
+
+// Cpp sucks 
+tm* HAL::getLocalTime()
+{
+    time(&_time_buffer);
+    return localtime(&_time_buffer);
+}

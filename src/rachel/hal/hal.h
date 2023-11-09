@@ -127,7 +127,7 @@ public:
 protected:
     LGFX_Device* _display;
     LGFX_Sprite* _canvas;
-    tm _date_time;
+    time_t _time_buffer;
     IMU::ImuData_t _imu_data;
     bool _is_sd_card_ready;
 
@@ -165,8 +165,14 @@ public:
     static void PowerOff() { Get()->powerOff(); }
     virtual void powerOff() {}
 
+    static void Reboot() { Get()->reboot(); }
+    virtual void reboot() {}
+
     static void SetSystemTime(tm dateTime) { return Get()->setSystemTime(dateTime); }
     virtual void setSystemTime(tm dateTime) {}
+
+    static tm* GetLocalTime() { return Get()->getLocalTime(); }
+    virtual tm* getLocalTime();
 
     static void UpdateImuData() { Get()->updateImuData(); }
     virtual void updateImuData() {}
@@ -198,17 +204,23 @@ public:
     static void RenderFpsPanel() { Get()->renderFpsPanel(); }
     virtual void renderFpsPanel();
 
-    // Pop error message and wait reboot 
-    static void PopFatalError(std::string& msg) { Get()->popFatalError(msg); }
-    virtual void popFatalError(std::string& msg) {}
+    // Pop error message and wait reboot or power off 
+    static void PopFatalError(std::string msg) { Get()->popFatalError(msg); }
+    virtual void popFatalError(std::string msg);
     
 
     /**
      * @brief File system APIs 
      * 
      */
-    static void LoadSystemFont24() { Get()->loadSystemFont24(); }
-    virtual void loadSystemFont24() {}
+    static void LoadTextFont24() { Get()->loadTextFont24(); }
+    virtual void loadTextFont24() {}
+
+    static void LoadTextFont16() { Get()->loadTextFont16(); }
+    virtual void loadTextFont16() {}
+
+    static void LoadLauncherFont24() { Get()->loadLauncherFont24(); }
+    virtual void loadLauncherFont24() {}
 
 
     /**

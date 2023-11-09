@@ -29,6 +29,9 @@ void AppTemplate::onResume()
 
     HAL::GetCanvas()->setTextScroll(true);
     HAL::GetCanvas()->setCursor(0, 0);
+    HAL::GetCanvas()->clear(THEME_COLOR_LIGHT);
+    HAL::LoadTextFont24();
+    HAL::GetCanvas()->setTextColor(THEME_COLOR_DARK, THEME_COLOR_LIGHT);
 }
 
 
@@ -39,8 +42,10 @@ void AppTemplate::onRunning()
     {
         spdlog::info("{}: Hi", getAppName());
 
-        HAL::GetCanvas()->printf("[%ld] %s: Hi\n", _data.count, getAppName().c_str());
+        
+        HAL::GetCanvas()->printf(" Hi!");
         HAL::CanvasUpdate();
+
 
         _data.count = HAL::Millis();
     }
