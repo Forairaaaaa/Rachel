@@ -17,6 +17,7 @@
 void HAL_Rachel::_spk_init()
 {
     spdlog::info("buzz init");
+    HAL_LOG_INFO("buzz init");
 
     _spk = new m5::Speaker_Class;
     auto cfg = _spk->config();
@@ -25,8 +26,11 @@ void HAL_Rachel::_spk_init()
     _spk->config(cfg);
 
     if (!_spk->begin())
+    {
         spdlog::error("buzz init failed!");
-
+        HAL_LOG_ERROR("buzz init failed!");
+    }
+        
 
     // // Test
     // _spk->tone(4000, 300);

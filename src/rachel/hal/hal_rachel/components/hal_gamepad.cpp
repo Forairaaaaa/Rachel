@@ -17,6 +17,7 @@
 void HAL_Rachel::_gamepad_init()
 {
     spdlog::info("gamepad init");
+    HAL_LOG_INFO("gamepad init");
 
     // Map pin to button 
     _gamepad_key_map[GAMEPAD::BTN_START]        = HAL_PIN_GAMEPAD_START;

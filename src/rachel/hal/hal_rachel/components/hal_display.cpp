@@ -14,6 +14,7 @@
 #include "../hal_config.h"
 
 
+
 class LGFX_Rachel : public lgfx::LGFX_Device 
 {
     lgfx::Panel_ST7789 _panel_instance;
@@ -78,4 +79,5 @@ void HAL_Rachel::_disp_init()
     _canvas->createSprite(_display->width(), _display->height());
 
     HAL_LOGGER_INIT();
+    HAL_LOG_INFO("rachel init");
 }

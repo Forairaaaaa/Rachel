@@ -54,10 +54,33 @@
 #define HAL_PIN_BUZZ                46
 
 
-// Init display logger 
+// HAL internal display logger 
 #define HAL_LOGGER_INIT() _canvas->setFont(&fonts::Font0); \
     _canvas->setTextSize(1); \
     _canvas->setTextScroll(true); \
-    _canvas->setTextColor((uint32_t)(0xEFEFEF), (uint32_t)(0x333333)); \
-    _canvas->setCursor(0, 0)
+    _canvas->setCursor(0, 0) 
+
+#define HAL_LOG(fmt, args...) _canvas->setTextColor(TFT_WHITE, TFT_BLACK); \
+    _canvas->printf(fmt, ##args); \
+    _canvas->print('\n'); \
+    _canvas->pushSprite(0, 0) 
+
+#define HAL_LOG_TIME() _canvas->setTextColor(TFT_WHITE, TFT_BLACK); \
+    _canvas->printf("[%ld] ", millis())
+
+#define HAL_LOG_INFO(fmt, args...) HAL_LOG_TIME(); \
+    _canvas->setTextColor(TFT_GREENYELLOW, TFT_BLACK); \
+    _canvas->print("[I] "); \
+    HAL_LOG(fmt, ##args) 
+
+#define HAL_LOG_WARN(fmt, args...) HAL_LOG_TIME(); \
+    _canvas->setTextColor(TFT_ORANGE, TFT_BLACK); \
+    _canvas->print("[W] "); \
+    HAL_LOG(fmt, ##args) 
+
+#define HAL_LOG_ERROR(fmt, args...) HAL_LOG_TIME(); \
+    _canvas->setTextColor(TFT_RED, TFT_BLACK); \
+    _canvas->print("[E] "); \
+    HAL_LOG(fmt, ##args) 
+
 

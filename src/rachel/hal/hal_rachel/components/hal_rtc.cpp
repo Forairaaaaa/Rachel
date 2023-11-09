@@ -17,11 +17,15 @@
 void HAL_Rachel::_rtc_init()
 {
     spdlog::info("rtc init");
+    HAL_LOG_INFO("rtc init");
 
     _rtc = new m5::RTC8563_Class(0x51, 400000, _i2c_bus);
     if (!_rtc->begin())
+    {
         spdlog::error("rtc init failed!");
-
+        HAL_LOG_ERROR("rtc init failed!");
+    }
+        
     _adjust_sys_time();
     
 

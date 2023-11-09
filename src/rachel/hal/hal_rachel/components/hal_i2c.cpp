@@ -17,6 +17,7 @@
 void HAL_Rachel::_i2c_init()
 {
     spdlog::info("i2c bus init");
+    HAL_LOG_INFO("i2c bus init");
 
     // Init bus 
     _i2c_bus = new m5::I2C_Class;
@@ -28,6 +29,9 @@ void HAL_Rachel::_i2c_init()
     for (int i = 8; i < 0x78; i++)
     {
         if (scan_list[i])
+        {
             spdlog::info("i2c bus scan get: 0x{0:x}", i);
+            HAL_LOG_INFO("i2c bus scan get: 0x{0:x}", i);
+        }
     }
 }
