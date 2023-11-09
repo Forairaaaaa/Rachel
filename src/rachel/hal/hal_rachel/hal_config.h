@@ -55,32 +55,44 @@
 
 
 // HAL internal display logger 
-#define HAL_LOGGER_INIT() _canvas->setFont(&fonts::Font0); \
+#define HAL_LOGGER_INIT() \
+    _canvas->setFont(&fonts::Font0); \
     _canvas->setTextSize(1); \
     _canvas->setTextScroll(true); \
     _canvas->setCursor(0, 0) 
 
-#define HAL_LOG(fmt, args...) _canvas->setTextColor(TFT_WHITE, TFT_BLACK); \
+#define HAL_LOG(fmt, args...) \
+    _canvas->setTextColor(TFT_LIGHTGRAY, TFT_BLACK); \
     _canvas->printf(fmt, ##args); \
     _canvas->print('\n'); \
     _canvas->pushSprite(0, 0) 
 
-#define HAL_LOG_TIME() _canvas->setTextColor(TFT_WHITE, TFT_BLACK); \
-    _canvas->printf("[%ld] ", millis())
+#define HAL_LOG_TAG_START() \
+    _canvas->setTextColor(TFT_LIGHTGRAY, TFT_BLACK); \
+    _canvas->print(" [") 
 
-#define HAL_LOG_INFO(fmt, args...) HAL_LOG_TIME(); \
+#define HAL_LOG_TAG_END() \
+    _canvas->setTextColor(TFT_LIGHTGRAY, TFT_BLACK); \
+    _canvas->print("] ") 
+
+#define HAL_LOG_INFO(fmt, args...) \
+    HAL_LOG_TAG_START(); \
     _canvas->setTextColor(TFT_GREENYELLOW, TFT_BLACK); \
-    _canvas->print("[I] "); \
+    _canvas->print("info"); \
+    HAL_LOG_TAG_END(); \
     HAL_LOG(fmt, ##args) 
 
-#define HAL_LOG_WARN(fmt, args...) HAL_LOG_TIME(); \
-    _canvas->setTextColor(TFT_ORANGE, TFT_BLACK); \
-    _canvas->print("[W] "); \
+#define HAL_LOG_WARN(fmt, args...) \
+    HAL_LOG_TAG_START(); \
+    _canvas->setTextColor(TFT_YELLOW, TFT_BLACK); \
+    _canvas->print("warn"); \
+    HAL_LOG_TAG_END(); \
     HAL_LOG(fmt, ##args) 
 
-#define HAL_LOG_ERROR(fmt, args...) HAL_LOG_TIME(); \
+#define HAL_LOG_ERROR(fmt, args...) \
+    HAL_LOG_TAG_START(); \
     _canvas->setTextColor(TFT_RED, TFT_BLACK); \
-    _canvas->print("[E] "); \
+    _canvas->print("error"); \
+    HAL_LOG_TAG_END(); \
     HAL_LOG(fmt, ##args) 
-
 

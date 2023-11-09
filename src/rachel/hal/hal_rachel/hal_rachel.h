@@ -28,6 +28,7 @@ private:
 private:
     void _power_init();
     void _disp_init();
+    void _disp_logo();
     void _fs_init();
     void _i2c_init();
     void _rtc_init();
@@ -36,6 +37,7 @@ private:
     void _sdcard_init();
     void _gamepad_init();
     void _adjust_sys_time();
+    void _sum_up();
 
 public:
     HAL_Rachel() :
@@ -65,6 +67,7 @@ public:
         _imu_init();
         _fs_init();
         _sdcard_init();
+        _sum_up();
     }
 
     void reboot() override;

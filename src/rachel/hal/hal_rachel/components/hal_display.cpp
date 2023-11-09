@@ -14,7 +14,6 @@
 #include "../hal_config.h"
 
 
-
 class LGFX_Rachel : public lgfx::LGFX_Device 
 {
     lgfx::Panel_ST7789 _panel_instance;
@@ -77,7 +76,55 @@ void HAL_Rachel::_disp_init()
 
     _canvas = new LGFX_Sprite(_display);
     _canvas->createSprite(_display->width(), _display->height());
-
+    
     HAL_LOGGER_INIT();
+    _disp_logo();
     HAL_LOG_INFO("rachel init");
 }
+
+
+static const std::string _logo = R"(
+    ____  ___   ________  __________
+   / __ \/   | / ____/ / / / ____/ /
+  / /_/ / /| |/ /   / /_/ / __/ / /
+ / _, _/ ___ / /___/ __  / /___/ /___
+/_/ |_/_/  |_\____/_/ /_/_____/_____/
+)";
+
+void HAL_Rachel::_disp_logo()
+{
+    _canvas->setFont(&fonts::Font0);
+    _canvas->setTextColor(TFT_ORANGE, TFT_BLACK);
+
+    for (int i = 0; i < _logo.size(); i++)
+    {
+        _canvas->printf("%c", _logo[i]);
+        if (i % 20 == 0)
+            _canvas->pushSprite(0, 0);
+    }
+    _canvas->printf("\n- @author Forairaaaaa\n");
+    _canvas->printf("\n- @build at %s %s\n\n", __TIME__, __DATE__);
+    _canvas->pushSprite(0, 0);
+}
+
+
+void HAL_Rachel::_sum_up()
+{
+    // Pause if btn A is pressing 
+    if (getButton(GAMEPAD::BTN_A))
+    {
+        HAL_LOG_WARN("btn A pressed and pause");
+        HAL_LOG_WARN("press btn start to proceed");
+        while (1)
+        {
+            delay(100);
+            if (getButton(GAMEPAD::BTN_START))
+                break;
+        }
+    }
+
+    HAL_LOG_INFO("hal init success!");
+    HAL_LOG_INFO("starting mooncake");
+    HAL_LOG_INFO("bye");
+}
+

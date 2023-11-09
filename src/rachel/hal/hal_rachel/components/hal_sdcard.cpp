@@ -29,6 +29,6 @@ void HAL_Rachel::_sdcard_init()
     }
 
     spdlog::info("sd card size: {}G", SD.cardSize() / 1073741824);
-    HAL_LOG_INFO("sd card size: {}G", SD.cardSize() / 1073741824);
+    HAL_LOG_INFO("sd card size: %ldG", SD.cardSize() / 1073741824);
     _is_sd_card_ready = true;
 }

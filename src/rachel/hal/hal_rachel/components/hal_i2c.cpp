@@ -31,7 +31,7 @@ void HAL_Rachel::_i2c_init()
         if (scan_list[i])
         {
             spdlog::info("i2c bus scan get: 0x{0:x}", i);
-            HAL_LOG_INFO("i2c bus scan get: 0x{0:x}", i);
+            HAL_LOG_INFO("i2c bus scan get: 0x%02X", i);
         }
     }
 }
