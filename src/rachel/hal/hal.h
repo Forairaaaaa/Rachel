@@ -230,4 +230,7 @@ public:
     // Get button state, @true: Pressing @false: Released 
     static bool GetButton(GAMEPAD::GamePadButton_t button) { return Get()->getButton(button); }
     virtual bool getButton(GAMEPAD::GamePadButton_t button) { return false; }
+
+    static bool GetAnyButton() { return Get()->getAnyButton(); }
+    virtual bool getAnyButton();
 };

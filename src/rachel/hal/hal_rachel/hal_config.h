@@ -52,3 +52,12 @@
 
 // Buzzer 
 #define HAL_PIN_BUZZ                46
+
+
+// Init display logger 
+#define HAL_LOGGER_INIT() _canvas->setFont(&fonts::Font0); \
+    _canvas->setTextSize(1); \
+    _canvas->setTextScroll(true); \
+    _canvas->setTextColor((uint32_t)(0xEFEFEF), (uint32_t)(0x333333)); \
+    _canvas->setCursor(0, 0)
+

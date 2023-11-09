@@ -102,11 +102,11 @@ void HAL::popFatalError(std::string msg)
     _canvas->pushSprite(0, 0);
 
 
-    // Wait reboot or power off 
+    // Press any button to poweroff 
     while (1)
     {
         delay(100);
-        if (getButton(GAMEPAD::BTN_A))
+        if (getAnyButton())
             powerOff();
     }
 }
@@ -117,4 +117,15 @@ tm* HAL::getLocalTime()
 {
     time(&_time_buffer);
     return localtime(&_time_buffer);
+}
+
+
+bool HAL::getAnyButton()
+{
+    for (int i = GAMEPAD::BTN_START; i != GAMEPAD::BTN_LEFT_STICK; i++)
+    {
+        if (getButton(static_cast<GAMEPAD::GamePadButton_t>(i)))
+            return true;
+    }
+    return false;
 }

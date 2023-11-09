@@ -76,4 +76,6 @@ void HAL_Rachel::_disp_init()
 
     _canvas = new LGFX_Sprite(_display);
     _canvas->createSprite(_display->width(), _display->height());
+
+    HAL_LOGGER_INIT();
 }
