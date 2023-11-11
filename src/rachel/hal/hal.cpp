@@ -78,14 +78,8 @@ void HAL::renderFpsPanel()
 void HAL::popFatalError(std::string msg)
 {
     static const uint32_t bg_color = 0x0078d7;
-
-    printf("????\n");
-
-    loadTextFont24();
-
-
-    printf("????\n");
     
+    loadTextFont24();
     _canvas->setTextColor(TFT_WHITE, bg_color);
     _canvas->fillScreen(bg_color);
     

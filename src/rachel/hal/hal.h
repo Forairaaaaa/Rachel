@@ -19,8 +19,10 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
+#include "lgfx_fx/lgfx_fx.h"
 #else
 #include <LovyanGFX.hpp>
+#include "lgfx_fx/lgfx_fx.h"
 #endif
 
 
@@ -126,7 +128,7 @@ public:
      */
 protected:
     LGFX_Device* _display;
-    LGFX_Sprite* _canvas;
+    LGFX_SpriteFx* _canvas;
     time_t _time_buffer;
     IMU::ImuData_t _imu_data;
     bool _is_sd_card_ready;
@@ -147,9 +149,9 @@ public:
     /**
      * @brief Full screen canvas (sprite)
      * 
-     * @return LGFX_Sprite* 
+     * @return LGFX_SpriteFx* 
      */
-    static LGFX_Sprite* GetCanvas() { return Get()->_canvas; }
+    static LGFX_SpriteFx* GetCanvas() { return Get()->_canvas; }
 
 public:
     /**

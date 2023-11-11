@@ -29,15 +29,7 @@ namespace SMOOTH_MENU {
         _current_menu = nullptr;
         _render_callback = nullptr;
 
-        /* Set to default */
-        {
-            SELECTOR::Config_t default_config;
-            SELECTOR::AnimContainer_t default_anim_cntr;
-            SELECTOR::ItemStatus_t default_item_status;
-            _cfg = default_config;
-            _anim_cntr = default_anim_cntr;
-            _item_status = default_item_status;
-        }
+        
     }
 
 
@@ -136,6 +128,17 @@ namespace SMOOTH_MENU {
         if (renderAtOnce) {
             render();
         }
+    }
+
+
+    void Selector_t::reset(uint32_t currentTime)
+    {
+        _anim_cntr.x.setAnim(_cfg.animPath_x,           0, 0, 1);
+        _anim_cntr.y.setAnim(_cfg.animPath_y,           0, 0, 1);
+        _anim_cntr.width.setAnim(_cfg.animPath_width,   0, 0, 0);
+        _anim_cntr.height.setAnim(_cfg.animPath_height, 0, 0, 0);
+        _anim_cntr.currentTime = currentTime;
+        _reset_anim_time();
     }
 
 

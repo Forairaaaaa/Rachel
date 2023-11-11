@@ -184,6 +184,9 @@ namespace SMOOTH_MENU {
             const RenderAttribute_t& getRenderAttribute();
 
 
+            void reset(uint32_t currentTime);
+
+
 
     };
 

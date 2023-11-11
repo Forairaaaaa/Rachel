@@ -24,13 +24,12 @@ void Launcher::_create_menu()
 
 
     // Create menu and render callback 
-    _data.menu = new SMOOTH_MENU::Simple_Menu;
+    _data.menu = new SMOOTH_MENU::Simple_Menu(HAL::GetCanvas()->width(), HAL::GetCanvas()->height());
     _data.menu_render_cb = new LauncherRenderCallBack;
 
-    // Init and set render callback 
-    _data.menu->init(HAL::GetCanvas()->width(), HAL::GetCanvas()->height());
+    // Setup 
     _data.menu->setRenderCallback(_data.menu_render_cb);
-
+    _data.menu->setFirstItem(1);
 
 
     // Set selector anim, in this launcher case, is the icon's moving anim (fixed selector)
@@ -119,7 +118,7 @@ void Launcher::_update_menu()
 
 
         // Open app 
-        else if (HAL::GetButton(GAMEPAD::BTN_A))
+        else if (HAL::GetButton(GAMEPAD::BTN_A) || HAL::GetButton(GAMEPAD::BTN_LEFT_STICK))
         {
             auto selected_item = _data.menu->getSelector()->getTargetItem();
             // spdlog::info("select: {} try create", selected_item);
