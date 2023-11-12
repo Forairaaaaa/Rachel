@@ -1,5 +1,5 @@
 /**
- * @file app_template.h
+ * @file app_gamepad.h
  * @author Forairaaaaa
  * @brief 
  * @version 0.1
@@ -9,16 +9,16 @@
  * 
  */
 #include <mooncake.h>
-#include "../assets/icons/icons.h"
+#include "assets/icon_app_ble_gamepad.h"
 
 
 namespace MOONCAKE::APPS
 {
     /**
-    * @brief Template 
+    * @brief Gamepad 
     *
     */
-    class AppTemplate : public APP_BASE
+    class AppGamepad : public APP_BASE
     {
     private:
         struct Data_t
@@ -34,11 +34,11 @@ namespace MOONCAKE::APPS
         void onDestroy() override;
     };
 
-    class AppTemplate_Packer : public APP_PACKER_BASE
+    class AppGamepad_Packer : public APP_PACKER_BASE
     {
-        std::string getAppName() override { return "Template"; }
-        void * getAppIcon() override { return (void*)image_data_icon_app_default; }
-        void *newApp() override { return new AppTemplate; }
-        void deleteApp(void *app) override { delete (AppTemplate*)app; }
+        std::string getAppName() override { return "手柄"; }
+        void * getAppIcon() override { return (void*)image_data_icon_app_ble_gamepad; }
+        void *newApp() override { return new AppGamepad; }
+        void deleteApp(void *app) override { delete (AppGamepad*)app; }
     };
 }

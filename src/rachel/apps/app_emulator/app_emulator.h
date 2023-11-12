@@ -1,5 +1,5 @@
 /**
- * @file app_template.h
+ * @file app_emulator.h
  * @author Forairaaaaa
  * @brief 
  * @version 0.1
@@ -9,16 +9,16 @@
  * 
  */
 #include <mooncake.h>
-#include "../assets/icons/icons.h"
+#include "assets/icon_app_emulator.h"
 
 
 namespace MOONCAKE::APPS
 {
     /**
-    * @brief Template 
+    * @brief Emulator 
     *
     */
-    class AppTemplate : public APP_BASE
+    class AppEmulator : public APP_BASE
     {
     private:
         struct Data_t
@@ -34,11 +34,11 @@ namespace MOONCAKE::APPS
         void onDestroy() override;
     };
 
-    class AppTemplate_Packer : public APP_PACKER_BASE
+    class AppEmulator_Packer : public APP_PACKER_BASE
     {
-        std::string getAppName() override { return "Template"; }
-        void * getAppIcon() override { return (void*)image_data_icon_app_default; }
-        void *newApp() override { return new AppTemplate; }
-        void deleteApp(void *app) override { delete (AppTemplate*)app; }
+        std::string getAppName() override { return "模拟器"; }
+        void * getAppIcon() override { return (void*)image_data_icon_app_emulator; }
+        void *newApp() override { return new AppEmulator; }
+        void deleteApp(void *app) override { delete (AppEmulator*)app; }
     };
 }

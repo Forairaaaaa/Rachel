@@ -43,13 +43,7 @@ void RACHEL::Setup()
     _mooncake->installApp(launcher);
 
     // Install apps 
-    _mooncake->installApp(new APPS::AppTemplate_Packer);
-    _mooncake->installApp(new APPS::AppTemplate_Packer);
-    _mooncake->installApp(new APPS::AppTemplate_Packer);
-    _mooncake->installApp(new APPS::AppTemplate_Packer);
-    _mooncake->installApp(new APPS::AppTemplate_Packer);
-    _mooncake->installApp(new APPS::AppTemplate_Packer);
-    _mooncake->installApp(new APPS::AppTemplate_Packer);
+    rachel_app_install_callback(_mooncake);
 
     // Create launcher 
     _mooncake->createApp(launcher);

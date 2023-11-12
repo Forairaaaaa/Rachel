@@ -40,6 +40,7 @@ void Launcher::onResume()
 
     // Load resources 
     HAL::LoadLauncherFont24();
+    // HAL::LoadTextFont24();
     HAL::GetCanvas()->setTextScroll(false);
 
     _update_clock(true);
