@@ -35,13 +35,12 @@ void AppGbemulator::onResume()
     HAL::GetCanvas()->setTextColor(THEME_COLOR_DARK, THEME_COLOR_LIGHT);
 
     gb_emulator_start();
-    while (1)
-        gb_emulator_update();
 }
 
 
 void AppGbemulator::onRunning()
 {
+    gb_emulator_update();
 }
 
 

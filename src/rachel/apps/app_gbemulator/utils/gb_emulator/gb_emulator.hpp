@@ -33,5 +33,5 @@ void gb_emulator_update()
     cpu_cycle();
     lcd_cycle();
     timer_cycle();
-    // lgfx::delayMicroseconds(1);
+    lgfx::delayMicroseconds(1);
 }

@@ -172,28 +172,25 @@ byte getColorIndexFromFrameBuffer(int x, int y) {
 // const int color[] = {0x000000, 0x555555, 0xAAAAAA, 0xFFFFFF};
 const int color[] = {TFT_BLACK, TFT_DARKGRAY, TFT_LIGHTGRAY, TFT_WHITE};
 
-
-
-
 void SDL_Flip(byte *screen)
 {
     //tft.fillScreen(ILI9341_BLACK);
-
+    
     int i,j;
     int x_offset = 40;
     int y_offset = 46;
-    for(i = 0; i < GAMEBOY_WIDTH; i++)
+    for(i = 0;i<GAMEBOY_WIDTH;i++)
     {
-        for(j = 0; j < GAMEBOY_HEIGHT; j++)
+        for(j = 0;j<GAMEBOY_HEIGHT;j++)
         {
             // tft.drawPixel(j, i, color[getColorIndexFromFrameBuffer(j, i)]);
             HAL::GetCanvas()->drawPixel(j + x_offset, i + y_offset, color[getColorIndexFromFrameBuffer(j, i)]);
         }
     }
+    memset(pixels, 0, GAMEBOY_HEIGHT * GAMEBOY_WIDTH / 4 * sizeof(byte));
+
     // HAL::CanvasUpdate();
     HAL::GetCanvas()->pushRotateZoom(0, 1.5, 1.5);
-    
-    memset(pixels, 0, GAMEBOY_HEIGHT * GAMEBOY_WIDTH / 4 * sizeof(byte));
 }
 
 void sdl_init(void)
@@ -256,7 +253,6 @@ byte* sdl_get_framebuffer(void)
 {
 	return pixels;
 }
-
 
 void sdl_frame(void)
 {

@@ -97,6 +97,5 @@ class HAL_Simulator : public HAL
 
         return false;
     }
-
 };
 #endif
