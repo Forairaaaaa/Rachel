@@ -1,5 +1,5 @@
 /**
- * @file app_emulator.h
+ * @file app_gbemulator.h
  * @author Forairaaaaa
  * @brief 
  * @version 0.1
@@ -9,16 +9,16 @@
  * 
  */
 #include <mooncake.h>
-#include "assets/icon_app_emulator.h"
+#include "../assets/icons/icons.h"
 
 
 namespace MOONCAKE::APPS
 {
     /**
-    * @brief Emulator 
+    * @brief Gbemulator 
     *
     */
-    class AppEmulator : public APP_BASE
+    class AppGbemulator : public APP_BASE
     {
     private:
         struct Data_t
@@ -34,11 +34,11 @@ namespace MOONCAKE::APPS
         void onDestroy() override;
     };
 
-    class AppEmulator_Packer : public APP_PACKER_BASE
+    class AppGbemulator_Packer : public APP_PACKER_BASE
     {
-        std::string getAppName() override { return "模拟器"; }
-        void * getAppIcon() override { return (void*)image_data_icon_app_emulator; }
-        void *newApp() override { return new AppEmulator; }
-        void deleteApp(void *app) override { delete (AppEmulator*)app; }
+        std::string getAppName() override { return "GB Emulator"; }
+        void* getAppIcon() override { return (void*)image_data_icon_app_default; }
+        void* newApp() override { return new AppGbemulator; }
+        void deleteApp(void *app) override { delete (AppGbemulator*)app; }
     };
 }

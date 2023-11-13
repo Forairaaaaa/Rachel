@@ -36,9 +36,9 @@ namespace MOONCAKE::APPS
 
     class AppScreencast_Packer : public APP_PACKER_BASE
     {
-        std::string getAppName() override { return "投屏"; }
-        void * getAppIcon() override { return (void*)image_data_icon_app_screen_cast; }
-        void *newApp() override { return new AppScreencast; }
+        std::string getAppName() override { return "Screen Cast"; }
+        void* getAppIcon() override { return (void*)image_data_icon_app_screen_cast; }
+        void* newApp() override { return new AppScreencast; }
         void deleteApp(void *app) override { delete (AppScreencast*)app; }
     };
 }

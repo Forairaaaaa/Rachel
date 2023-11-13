@@ -36,7 +36,7 @@ namespace MOONCAKE::APPS
 
     class AppGamepad_Packer : public APP_PACKER_BASE
     {
-        std::string getAppName() override { return "手柄"; }
+        std::string getAppName() override { return "Controller"; }
         void * getAppIcon() override { return (void*)image_data_icon_app_ble_gamepad; }
         void *newApp() override { return new AppGamepad; }
         void deleteApp(void *app) override { delete (AppGamepad*)app; }

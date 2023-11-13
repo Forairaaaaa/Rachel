@@ -37,8 +37,8 @@ namespace MOONCAKE::APPS
     class AppTemplate_Packer : public APP_PACKER_BASE
     {
         std::string getAppName() override { return "Template"; }
-        void * getAppIcon() override { return (void*)image_data_icon_app_default; }
-        void *newApp() override { return new AppTemplate; }
+        void* getAppIcon() override { return (void*)image_data_icon_app_default; }
+        void* newApp() override { return new AppTemplate; }
         void deleteApp(void *app) override { delete (AppTemplate*)app; }
     };
 }

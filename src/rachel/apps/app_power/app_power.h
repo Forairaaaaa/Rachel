@@ -29,9 +29,9 @@ namespace MOONCAKE::APPS
 
     class AppPower_Packer : public APP_PACKER_BASE
     {
-        std::string getAppName() override { return "电源"; }
-        void * getAppIcon() override { return (void*)image_data_icon_app_power; }
-        void *newApp() override { return new AppPower; }
+        std::string getAppName() override { return "Power"; }
+        void* getAppIcon() override { return (void*)image_data_icon_app_power; }
+        void* newApp() override { return new AppPower; }
         void deleteApp(void *app) override { delete (AppPower*)app; }
     };
 }

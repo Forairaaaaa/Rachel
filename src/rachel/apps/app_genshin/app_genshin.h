@@ -36,9 +36,9 @@ namespace MOONCAKE::APPS
 
     class AppGenshin_Packer : public APP_PACKER_BASE
     {
-        std::string getAppName() override { return "原神"; }
-        void * getAppIcon() override { return (void*)image_data_icon_app_genshin; }
-        void *newApp() override { return new AppGenshin; }
+        std::string getAppName() override { return "?"; }
+        void* getAppIcon() override { return (void*)image_data_icon_app_genshin; }
+        void* newApp() override { return new AppGenshin; }
         void deleteApp(void *app) override { delete (AppGenshin*)app; }
     };
 }

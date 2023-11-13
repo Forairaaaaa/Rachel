@@ -36,9 +36,9 @@ namespace MOONCAKE::APPS
 
     class AppMusic_Packer : public APP_PACKER_BASE
     {
-        std::string getAppName() override { return "音乐"; }
-        void * getAppIcon() override { return (void*)image_data_icon_app_music; }
-        void *newApp() override { return new AppMusic; }
+        std::string getAppName() override { return "Music"; }
+        void* getAppIcon() override { return (void*)image_data_icon_app_music; }
+        void* newApp() override { return new AppMusic; }
         void deleteApp(void *app) override { delete (AppMusic*)app; }
     };
 }
