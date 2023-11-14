@@ -1,5 +1,5 @@
 /**
- * @file app_gamepad.h
+ * @file app_ble_controller.h
  * @author Forairaaaaa
  * @brief 
  * @version 0.1
@@ -15,10 +15,10 @@
 namespace MOONCAKE::APPS
 {
     /**
-    * @brief Gamepad 
+    * @brief Ble_controller 
     *
     */
-    class AppGamepad : public APP_BASE
+    class AppBle_controller : public APP_BASE
     {
     private:
         struct Data_t
@@ -34,11 +34,11 @@ namespace MOONCAKE::APPS
         void onDestroy() override;
     };
 
-    class AppGamepad_Packer : public APP_PACKER_BASE
+    class AppBle_controller_Packer : public APP_PACKER_BASE
     {
-        std::string getAppName() override { return "Controller"; }
-        void * getAppIcon() override { return (void*)image_data_icon_app_ble_gamepad; }
-        void *newApp() override { return new AppGamepad; }
-        void deleteApp(void *app) override { delete (AppGamepad*)app; }
+        std::string getAppName() override { return "Ble Controller"; }
+        void* getAppIcon() override { return (void*)image_data_icon_app_ble_gamepad; }
+        void* newApp() override { return new AppBle_controller; }
+        void deleteApp(void *app) override { delete (AppBle_controller*)app; }
     };
 }

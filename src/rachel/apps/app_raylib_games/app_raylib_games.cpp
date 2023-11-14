@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2023
  * 
  */
-#include "app_raylibgames.h"
+#include "app_raylib_games.h"
 #include "spdlog/spdlog.h"
 #include "../../hal/hal.h"
 #include "../assets/theme/theme.h"

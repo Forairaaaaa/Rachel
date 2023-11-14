@@ -16,7 +16,7 @@
 #include "lcd.h"
 #include "sdl.h"
 #include "gbrom.h"
-#include "../../../../hal/hal.h"
+#include "../../../hal/hal.h"
 
 
 void gb_emulator_start()

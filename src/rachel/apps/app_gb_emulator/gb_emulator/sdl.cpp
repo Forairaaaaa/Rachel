@@ -155,7 +155,7 @@ void sdl_quit()
 //     }
 // }
 
-#include "../../../../hal/hal.h"
+#include "../../../hal/hal.h"
 #define byte uint8_t
 
 #define GAMEBOY_HEIGHT 160

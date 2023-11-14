@@ -1,5 +1,5 @@
 /**
- * @file app_gamepad.cpp
+ * @file app_ble_controller.cpp
  * @author Forairaaaaa
  * @brief 
  * @version 0.1
@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2023
  * 
  */
-#include "app_gamepad.h"
+#include "app_ble_controller.h"
 #include "spdlog/spdlog.h"
 #include "../../hal/hal.h"
 #include "../assets/theme/theme.h"
@@ -18,13 +18,13 @@
 using namespace MOONCAKE::APPS;
 
 
-void AppGamepad::onCreate()
+void AppBle_controller::onCreate()
 {
     spdlog::info("{} onCreate", getAppName());
 }
 
 
-void AppGamepad::onResume()
+void AppBle_controller::onResume()
 {
     spdlog::info("{} onResume", getAppName());
 
@@ -39,7 +39,7 @@ void AppGamepad::onResume()
 using namespace SYSTEM::UI;
 
 
-void AppGamepad::onRunning()
+void AppBle_controller::onRunning()
 {
     // // Every seconds 
     // if ((HAL::Millis() - _data.count) > 1000)
@@ -122,7 +122,7 @@ void AppGamepad::onRunning()
 }
 
 
-void AppGamepad::onDestroy()
+void AppBle_controller::onDestroy()
 {
     spdlog::info("{} onDestroy", getAppName());
 }

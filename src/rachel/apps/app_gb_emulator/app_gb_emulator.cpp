@@ -8,23 +8,23 @@
  * @copyright Copyright (c) 2023
  * 
  */
-#include "app_gbemulator.h"
+#include "app_gb_emulator.h"
 #include "spdlog/spdlog.h"
 #include "../../hal/hal.h"
 #include "../assets/theme/theme.h"
-#include "utils/gb_emulator/gb_emulator.hpp"
+#include "gb_emulator/gb_emulator.hpp"
 
 
 using namespace MOONCAKE::APPS;
 
 
-void AppGbemulator::onCreate()
+void AppGb_emulator::onCreate()
 {
     spdlog::info("{} onCreate", getAppName());
 }
 
 
-void AppGbemulator::onResume()
+void AppGb_emulator::onResume()
 {
     spdlog::info("{} onResume", getAppName());
 
@@ -38,13 +38,13 @@ void AppGbemulator::onResume()
 }
 
 
-void AppGbemulator::onRunning()
+void AppGb_emulator::onRunning()
 {
     gb_emulator_update();
 }
 
 
-void AppGbemulator::onDestroy()
+void AppGb_emulator::onDestroy()
 {
     spdlog::info("{} onDestroy", getAppName());
 }

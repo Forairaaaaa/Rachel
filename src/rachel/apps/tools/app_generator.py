@@ -1,6 +1,6 @@
 import os as os
 from shutil import copytree
-
+import re
 
 app_name = ""
 def getAppName():
@@ -12,7 +12,7 @@ def getAppName():
 def checkAppName():
     if app_name == "":
         return False
-    if not app_name.isalpha():
+    if not re.match("^[a-zA-Z_]+$", app_name):
         return False
     if app_name == "template":
         return False

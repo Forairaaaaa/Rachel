@@ -18,15 +18,8 @@ namespace MOONCAKE::APPS
     * @brief Gbemulator 
     *
     */
-    class AppGbemulator : public APP_BASE
+    class AppGb_emulator : public APP_BASE
     {
-    private:
-        struct Data_t
-        {
-            unsigned long count = 0;
-        };
-        Data_t _data;
-
     public:
         void onCreate() override;
         void onResume() override;
@@ -34,11 +27,11 @@ namespace MOONCAKE::APPS
         void onDestroy() override;
     };
 
-    class AppGbemulator_Packer : public APP_PACKER_BASE
+    class AppGb_emulator_Packer : public APP_PACKER_BASE
     {
         std::string getAppName() override { return "GB Emulator"; }
         void* getAppIcon() override { return (void*)image_data_icon_app_default; }
-        void* newApp() override { return new AppGbemulator; }
-        void deleteApp(void *app) override { delete (AppGbemulator*)app; }
+        void* newApp() override { return new AppGb_emulator; }
+        void deleteApp(void *app) override { delete (AppGb_emulator*)app; }
     };
 }

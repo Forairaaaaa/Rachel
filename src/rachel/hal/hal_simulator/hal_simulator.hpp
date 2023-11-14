@@ -86,14 +86,16 @@ class HAL_Simulator : public HAL
             return !lgfx::gpio_in(39);
         else if (button == GAMEPAD::BTN_RIGHT)
             return !lgfx::gpio_in(37);
-        else if (button == GAMEPAD::BTN_B)
+        // else if (button == GAMEPAD::BTN_B)
+        //     return !lgfx::gpio_in(38);
+        // else if (button == GAMEPAD::BTN_SELECT)
+        //     return !lgfx::gpio_in(38);
+        // else if (button == GAMEPAD::BTN_UP)
+        //     return !lgfx::gpio_in(39);
+        // else if (button == GAMEPAD::BTN_DOWN)
+        //     return !lgfx::gpio_in(37);
+        else if (button == GAMEPAD::BTN_START)
             return !lgfx::gpio_in(38);
-        else if (button == GAMEPAD::BTN_SELECT)
-            return !lgfx::gpio_in(38);
-        else if (button == GAMEPAD::BTN_UP)
-            return !lgfx::gpio_in(39);
-        else if (button == GAMEPAD::BTN_DOWN)
-            return !lgfx::gpio_in(37);
 
         return false;
     }
