@@ -101,7 +101,7 @@ void HAL::popFatalError(std::string msg)
     {
         delay(100);
         if (getAnyButton())
-            powerOff();
+            reboot();
     }
 }
 

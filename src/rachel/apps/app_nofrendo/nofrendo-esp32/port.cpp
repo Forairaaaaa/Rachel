@@ -136,11 +136,14 @@ extern "C" void nofendo_pause_menu()
 /* ------------------------------------------------------------------ */
 #include <Arduino.h>
 #include <SD.h>
+#include <esp_partition.h>
 
-static const String _nes_rom_path = "/nes_roms";
 
 static char* _load_rom_2_ram(File& rom_file);
 static char* _load_rom_2_flash(File& rom_file);
+
+
+static const String _nes_rom_path = "/nes_roms";
 
 extern "C" char* nofendo_get_rom()
 {
@@ -177,13 +180,12 @@ extern "C" char* nofendo_get_rom()
         entry.close();    
     }
     if (rom_list.size() == 1)
-        HAL::PopFatalError("里面没游戏啊朋友");
+        HAL::PopFatalError("没游戏啊朋友");
 
 
     // Create select menu
     SelectMenu menu;
     auto selected_item = menu.waitResult(rom_list);
-    HAL::GetCanvas()->fillScreen(TFT_BLACK);
 
 
     // Try open 
@@ -194,7 +196,8 @@ extern "C" char* nofendo_get_rom()
     auto rom_file = SD.open(rom_path, FILE_READ);
 
 
-    return _load_rom_2_ram(rom_file);
+    // return _load_rom_2_ram(rom_file);
+    return _load_rom_2_flash(rom_file);
 }
 
 
@@ -218,18 +221,79 @@ static char* _load_rom_2_ram(File& rom_file)
 
 
     // Clear screen
-    HAL::GetCanvas()->fillScreen(TFT_BLACK);
+    HAL::GetCanvas()->clear(TFT_BLACK);
 
 
     return rom_buffer;
 }
 
 
+#include "../../../assets/theme/theme.h"
+
+#define MAX_ROM_SIZE (1*1024*1024)
+
+// Refs: 
+// https://github.com/espressif/esp32-nesemu/blob/master/main/main.c#L13
+// https://github.com/Ryuzaki-MrL/Espeon/blob/master/espeon.cpp#L186
 static char* _load_rom_2_flash(File& rom_file)
 {
-    char* rom_buffer = nullptr;
+    // Get partition 
+    const esp_partition_t* part = esp_partition_find_first(ESP_PARTITION_TYPE_ANY, ESP_PARTITION_SUBTYPE_ANY, "gamerom");
+	if (!part)
+        HAL::PopFatalError("没这分区啊朋友\n  (gamerom)");
 
-    return rom_buffer;
+
+    HAL::GetCanvas()->clear(THEME_COLOR_DARK);
+    HAL::GetCanvas()->setTextScroll(true);
+    HAL::GetCanvas()->setCursor(0, 0);
+    HAL::GetCanvas()->printf("Erasing...\n");
+    HAL::CanvasUpdate();
+
+
+    // Erase 
+    esp_err_t err;
+	err = esp_partition_erase_range(part, 0, MAX_ROM_SIZE);
+	if (err != ESP_OK)
+		HAL::PopFatalError("格式分区失败");
+	
+
+    // Flash rom into partition 
+    const size_t bufsize = 32 * 1024;
+	size_t romsize = rom_file.size();
+	uint8_t* rombuf = (uint8_t*)calloc(bufsize, 1);
+	
+	printf("start flashing:\n");
+    HAL::GetCanvas()->printf("Flashing...\n");
+
+	size_t offset = 0;
+	while(rom_file.available()) 
+    {
+		rom_file.read(rombuf, bufsize);
+		esp_partition_write(part, offset, (const void*)rombuf, bufsize);
+		offset += bufsize;
+
+        printf("%d%%\n", offset * 100 / romsize);
+        HAL::GetCanvas()->printf("%d%%\n", offset * 100 / romsize);
+        HAL::CanvasUpdate();
+	}
+
+	free(rombuf);
+	rom_file.close();
+
+
+    // Map into system 
+    spi_flash_mmap_handle_t hrom;
+	const uint8_t* romdata;
+	// esp_err_t err;
+	err = esp_partition_mmap(part, 0, MAX_ROM_SIZE, SPI_FLASH_MMAP_DATA, (const void**)&romdata, &hrom);
+	if (err != ESP_OK)
+        HAL::PopFatalError("映射失败");
+
+
+    // Clear screen
+    HAL::GetCanvas()->clear(TFT_BLACK);
+
+
+	return (char*)romdata;
 }
-
 /* ------------------------------------------------------------------ */
