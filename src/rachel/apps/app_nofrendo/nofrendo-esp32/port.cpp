@@ -130,58 +130,106 @@ extern "C" void nofendo_pause_menu()
 
 
 /**
- * @brief Roms
+ * @brief Get roms from sd card 
  * 
  */
 /* ------------------------------------------------------------------ */
-// #include "../roms/rom_smb.h"
-// #include "../roms/rom_contra.h"
-// #include "../roms/rom_tetris.h"
-// #include "../roms/rom_zelda.h"
+#include <Arduino.h>
+#include <SD.h>
 
-// extern "C" char* nofendo_get_rom()
-// {
-//     char* rom = (char*)rom_smb;
+static const String _nes_rom_path = "/nes_roms";
 
-//     SelectMenu menu;
-//     std::vector<std::string> item_list = {
-//         "[ROMS]",
-//         "Super Mario Bros",
-//         "Contra",
-//         "Zelda",
-//         "Tetris"
-//     };
-//     auto selected_item = menu.waitResult(item_list);
-
-//     if (selected_item == 1)
-//         rom = (char*)rom_smb;
-//     else if (selected_item == 2)
-//         rom = (char*)rom_contra;
-//     else if (selected_item == 3)
-//         rom = (char*)rom_zelda;
-//     else if (selected_item == 4)
-//         rom = (char*)rom_tetris;
-
-//     return rom;
-// }
-
+static char* _load_rom_2_ram(File& rom_file);
+static char* _load_rom_2_flash(File& rom_file);
 
 extern "C" char* nofendo_get_rom()
 {
-    char* rom = nullptr;
+    if (!HAL::CheckSdCard())
+        HAL::PopFatalError("没SD卡啊朋友");
+    printf("try loading roms from SD card in %s\n", _nes_rom_path.c_str());
 
-    // Ls rom dir 
-    // TODO 
 
-    // Create menu
-    // TODO
+    // Check path 
+    if (!SD.exists(_nes_rom_path))
+    {
+        std::string msg = "ROM路径不存在\n  (";
+        msg += _nes_rom_path.c_str();
+        msg += ")";
+        HAL::PopFatalError(msg);
+    }
 
-    // Allocate buffer
-    // TODO
+    // List rom dir 
+    auto rom_directory = SD.open(_nes_rom_path);
+    std::vector<std::string> rom_list = {"[NES ROMS]"};
+    while (1)
+    {
+        File entry =  rom_directory.openNextFile();
+
+        if (!entry)
+            break;
+
+        if (!entry.isDirectory())
+        {
+            rom_list.push_back(entry.name());
+            printf("get file: %s size: %ld\n", entry.name(), entry.size());
+        }
+        
+        entry.close();    
+    }
+    if (rom_list.size() == 1)
+        HAL::PopFatalError("里面没游戏啊朋友");
+
+
+    // Create select menu
+    SelectMenu menu;
+    auto selected_item = menu.waitResult(rom_list);
+    HAL::GetCanvas()->fillScreen(TFT_BLACK);
+
+
+    // Try open 
+    String rom_path = _nes_rom_path;
+    rom_path += "/";
+    rom_path += rom_list[selected_item].c_str();
+    printf("try open %s\n", rom_path.c_str());
+    auto rom_file = SD.open(rom_path, FILE_READ);
+
+
+    return _load_rom_2_ram(rom_file);
+}
+
+
+static char* _load_rom_2_ram(File& rom_file)
+{
+    // Try allocate rom buffer
+    printf("try alloc buffer size: %ld\n", rom_file.size());
+    auto free_block = heap_caps_get_largest_free_block(MALLOC_CAP_DEFAULT);
+    printf("free block: %ld\n", free_block);
+
+    if (free_block < rom_file.size())
+        HAL::PopFatalError("内存不够啊朋友");
+
+
+    // Alloc buffer 
+    char* rom_buffer = new char[rom_file.size()];
 
     // Copy rom
-    // TODO
+    rom_file.readBytes(rom_buffer, rom_file.size());
+    rom_file.close();
 
-    return rom;
+
+    // Clear screen
+    HAL::GetCanvas()->fillScreen(TFT_BLACK);
+
+
+    return rom_buffer;
 }
+
+
+static char* _load_rom_2_flash(File& rom_file)
+{
+    char* rom_buffer = nullptr;
+
+    return rom_buffer;
+}
+
 /* ------------------------------------------------------------------ */
