@@ -230,7 +230,7 @@ static char* _load_rom_2_ram(File& rom_file)
 
 #include "../../../assets/theme/theme.h"
 
-#define MAX_ROM_SIZE (1*1024*1024)
+#define MAX_ROM_SIZE (2*1024*1024)
 
 // Refs: 
 // https://github.com/espressif/esp32-nesemu/blob/master/main/main.c#L13
