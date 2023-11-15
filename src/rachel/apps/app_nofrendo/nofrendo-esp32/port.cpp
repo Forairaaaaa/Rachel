@@ -134,33 +134,53 @@ extern "C" void nofendo_pause_menu()
  * 
  */
 /* ------------------------------------------------------------------ */
-#include "../roms/rom_smb.h"
-#include "../roms/rom_contra.h"
-#include "../roms/rom_tetris.h"
-#include "../roms/rom_zelda.h"
+// #include "../roms/rom_smb.h"
+// #include "../roms/rom_contra.h"
+// #include "../roms/rom_tetris.h"
+// #include "../roms/rom_zelda.h"
+
+// extern "C" char* nofendo_get_rom()
+// {
+//     char* rom = (char*)rom_smb;
+
+//     SelectMenu menu;
+//     std::vector<std::string> item_list = {
+//         "[ROMS]",
+//         "Super Mario Bros",
+//         "Contra",
+//         "Zelda",
+//         "Tetris"
+//     };
+//     auto selected_item = menu.waitResult(item_list);
+
+//     if (selected_item == 1)
+//         rom = (char*)rom_smb;
+//     else if (selected_item == 2)
+//         rom = (char*)rom_contra;
+//     else if (selected_item == 3)
+//         rom = (char*)rom_zelda;
+//     else if (selected_item == 4)
+//         rom = (char*)rom_tetris;
+
+//     return rom;
+// }
+
 
 extern "C" char* nofendo_get_rom()
 {
-    char* rom = (char*)rom_smb;
+    char* rom = nullptr;
 
-    SelectMenu menu;
-    std::vector<std::string> item_list = {
-        "[ROMS]",
-        "Super Mario Bros",
-        "Contra",
-        "Zelda",
-        "Tetris"
-    };
-    auto selected_item = menu.waitResult(item_list);
+    // Ls rom dir 
+    // TODO 
 
-    if (selected_item == 1)
-        rom = (char*)rom_smb;
-    else if (selected_item == 2)
-        rom = (char*)rom_contra;
-    else if (selected_item == 3)
-        rom = (char*)rom_zelda;
-    else if (selected_item == 4)
-        rom = (char*)rom_tetris;
+    // Create menu
+    // TODO
+
+    // Allocate buffer
+    // TODO
+
+    // Copy rom
+    // TODO
 
     return rom;
 }

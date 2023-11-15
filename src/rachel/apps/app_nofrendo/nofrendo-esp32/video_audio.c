@@ -46,7 +46,7 @@
 // #include "audio.h"
 // #include "settings.h"
 // #include "power.h"
-#include "display_nes.h"
+// #include "display_nes.h"
 // #include "menu.h"
 // #include "gb_frame.h"
 #include "port.h"
