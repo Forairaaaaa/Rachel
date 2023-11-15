@@ -5,27 +5,6 @@
 // #include <thread>
 #include <chrono>
 
-
-
-#include <Arduino.h>
-
-static void task_push_buffer(void* param)
-{
-    uint32_t count = HAL::Millis();
-    while (1)
-    {
-        HAL::Delay(10);
-
-        if (HAL::Millis() - count > 33)
-        {
-            HAL::CanvasUpdate();
-            count = HAL::Millis();
-        }
-    }
-    vTaskDelete(NULL);
-}
-
-
 namespace sn
 {
     Emulator::Emulator() :
@@ -249,62 +228,35 @@ namespace sn
 
     void Emulator::update()
     {
-        // // sf::Event event;
-        // bool focus = true, pause = false;
+        // sf::Event event;
+        bool focus = true, pause = false;
     
-        // if (focus && !pause)
-        // {
-        //     m_elapsedTime += std::chrono::high_resolution_clock::now() - m_cycleTimer;
-        //     m_cycleTimer = std::chrono::high_resolution_clock::now();
-
-        //     while (m_elapsedTime > m_cpuCycleDuration)
-        //     {
-        //         //PPU
-        //         m_ppu.step();
-        //         m_ppu.step();
-        //         m_ppu.step();
-        //         //CPU
-        //         m_cpu.step();
-
-        //         m_elapsedTime -= m_cpuCycleDuration;
-        //     }
-
-        //     // m_window.draw(m_emulatorScreen);
-        //     // m_window.display();
-        //     HAL::CanvasUpdate();
-        // }
-        // else
-        // {
-        //     // sf::sleep(sf::milliseconds(1000/60));
-        //     //std::this_thread::sleep_for(std::chrono::milliseconds(1000/60)); //1/60 second
-        //     // HAL::Delay(1000 / 60);
-        // }
-
-
-
-        // Get current core num 
-        // xTaskCreatePinnedToCore(task_push_buffer, "nes", 2000, NULL, 15, NULL, 1);
-        xTaskCreatePinnedToCore(task_push_buffer, "nes", 2000, NULL, 15, NULL, 0);
-
-
-        uint32_t count = HAL::Millis();
-        uint32_t count2 = 0;
-        while (1)
+        if (focus && !pause)
         {
-            //PPU
-            m_ppu.step();
-            m_ppu.step();
-            m_ppu.step();
-            //CPU
-            m_cpu.step();
+            m_elapsedTime += std::chrono::high_resolution_clock::now() - m_cycleTimer;
+            m_cycleTimer = std::chrono::high_resolution_clock::now();
 
-            // count2++;
-            // if (HAL::Millis() - count > 33)
-            // {
-            //     printf("%d\n", count2);
-            //     HAL::CanvasUpdate();
-            //     count = HAL::Millis();
-            // }
+            while (m_elapsedTime > m_cpuCycleDuration)
+            {
+                //PPU
+                m_ppu.step();
+                m_ppu.step();
+                m_ppu.step();
+                //CPU
+                m_cpu.step();
+
+                m_elapsedTime -= m_cpuCycleDuration;
+            }
+
+            // m_window.draw(m_emulatorScreen);
+            // m_window.display();
+            HAL::CanvasUpdate();
+        }
+        else
+        {
+            // sf::sleep(sf::milliseconds(1000/60));
+            //std::this_thread::sleep_for(std::chrono::milliseconds(1000/60)); //1/60 second
+            HAL::Delay(1000 / 60);
         }
     
     }
