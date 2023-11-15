@@ -49,6 +49,7 @@
 #include "display_nes.h"
 // #include "menu.h"
 // #include "gb_frame.h"
+#include "port.h"
 
 #define DEFAULT_SAMPLERATE 32000
 #define DEFAULT_FRAGSIZE 512
@@ -232,7 +233,6 @@ static void custom_blit(bitmap_t *bmp, int num_dirties, rect_t *dirty_rects) {
 }
 */
 
-void nofendo_render_frame(const uint8_t* data[]);
 
 // static uint8_t lcdfb[256 * 240];
 static void custom_blit(bitmap_t *bmp, int num_dirties, rect_t *dirty_rects)
@@ -392,11 +392,11 @@ static void custom_blit(bitmap_t *bmp, int num_dirties, rect_t *dirty_rects)
 
 static void SaveState()
 {
-    printf("Saving state.\n");
+    // printf("Saving state.\n");
 
-    save_sram();
+    // save_sram();
 
-    printf("Saving state OK.\n");
+    // printf("Saving state OK.\n");
 }
 
 static void PowerDown()
@@ -460,18 +460,6 @@ typedef struct
 // static ushort powerFrameCount;
 
 
-uint8_t nofendo_get_btn_a();
-uint8_t nofendo_get_btn_b();
-uint8_t nofendo_get_btn_select();
-uint8_t nofendo_get_btn_start();
-uint8_t nofendo_get_btn_right();
-uint8_t nofendo_get_btn_left();
-uint8_t nofendo_get_btn_up();
-uint8_t nofendo_get_btn_down();
-uint8_t nofendo_get_btn_x();
-uint8_t nofendo_get_btn_y();
-
-
 static void gamepad_read(input_gamepad_state *out_state)
 {
     out_state->values[GAMEPAD_INPUT_START]  = nofendo_get_btn_start();
@@ -482,7 +470,7 @@ static void gamepad_read(input_gamepad_state *out_state)
     out_state->values[GAMEPAD_INPUT_RIGHT]  = nofendo_get_btn_right();
     out_state->values[GAMEPAD_INPUT_A]      = nofendo_get_btn_a();
     out_state->values[GAMEPAD_INPUT_B]      = nofendo_get_btn_b();
-    out_state->values[GAMEPAD_INPUT_MENU] = !nofendo_get_btn_y();
+    out_state->values[GAMEPAD_INPUT_MENU] = !nofendo_get_btn_x();
     // out_state->values[GAMEPAD_INPUT_L] = !nofendo_get_btn_start();
     // out_state->values[GAMEPAD_INPUT_R] = !nofendo_get_btn_start();
 }
@@ -558,7 +546,8 @@ static int ConvertGamepadInput()
 
     if (!state.values[GAMEPAD_INPUT_MENU])
     {
-        printf("no menu\n");
+        // printf("no menu\n");
+        nofendo_pause_menu();
     }
 
     // previous_state = state;
@@ -654,9 +643,9 @@ int osd_init()
     return 0;
 }
 
-#include "../game_roms/smb.h"
 char* osd_getromdata()
 {
-    printf("Initialized. ROM@%p\n", nes_rom_smb);
-    return (char*)nes_rom_smb;
+    // printf("Initialized. ROM@%p\n", nes_rom_smb);
+    // return (char*)nes_rom_smb;
+    return nofendo_get_rom();
 }
