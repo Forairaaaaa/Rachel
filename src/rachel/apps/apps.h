@@ -24,11 +24,11 @@
 void rachel_app_install_callback(MOONCAKE::Mooncake* mooncake)
 {
     mooncake->installApp(new MOONCAKE::APPS::AppSettings_Packer);
+    mooncake->installApp(new MOONCAKE::APPS::AppNofrendo_Packer);
     mooncake->installApp(new MOONCAKE::APPS::AppBle_controller_Packer);
     mooncake->installApp(new MOONCAKE::APPS::AppScreencast_Packer);
     mooncake->installApp(new MOONCAKE::APPS::AppRaylibgames_Packer);
     mooncake->installApp(new MOONCAKE::APPS::AppMusic_Packer);
     mooncake->installApp(new MOONCAKE::APPS::AppGenshin_Packer);
-    mooncake->installApp(new MOONCAKE::APPS::AppNofrendo_Packer);
     /* Install app locator(Don't remove) */
 }

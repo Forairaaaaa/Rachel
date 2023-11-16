@@ -37,6 +37,7 @@ private:
     void _sdcard_init();
     void _gamepad_init();
     void _adjust_sys_time();
+    void _system_config_init();
     void _sum_up();
 
 public:
@@ -67,6 +68,7 @@ public:
         _imu_init();
         _fs_init();
         _sdcard_init();
+        _system_config_init();
         _sum_up();
     }
 
@@ -81,4 +83,6 @@ public:
     void updateImuData() override;
     void beep(float frequency, uint32_t duration) override;
     void setBeepVolume(uint8_t volume) override;
+    void loadSystemConfig() override;
+    void saveSystemConfig() override;
 };

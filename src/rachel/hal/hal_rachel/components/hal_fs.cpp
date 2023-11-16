@@ -14,6 +14,7 @@
 #include <LittleFS.h>
 #include "../hal_rachel.h"
 #include "../hal_config.h"
+#include <ArduinoJson.h>
 
 
 void HAL_Rachel::_fs_init()
@@ -29,3 +30,71 @@ void HAL_Rachel::_fs_init()
     }
 }
 
+
+static const String _system_config_path = "/_sys/cfg.json";
+
+
+void HAL_Rachel::loadSystemConfig()
+{
+    spdlog::info("start loading config from fs");
+
+    // Check exist
+    if (!LittleFS.exists(_system_config_path))
+    {
+        spdlog::warn("{} not exist", _system_config_path.c_str());
+        saveSystemConfig();
+        return;
+    }
+
+    // Open file 
+    File config_file = LittleFS.open(_system_config_path);
+    if (!config_file)
+        popFatalError("打开配置文件失败");
+
+    // Parse json
+    DynamicJsonDocument doc(2048);
+    deserializeJson(doc, config_file);
+
+    // Copy configs 
+    _config.brightness = doc["brightness"];
+    _config.volume = doc["volume"];
+
+    spdlog::info("get config:\nbrightness: {}\nvolume: {}", _config.brightness, _config.volume);
+    
+    config_file.close();
+}
+
+
+void HAL_Rachel::saveSystemConfig()
+{
+    spdlog::info("start saving config to fs");
+
+    // Open file 
+    File config_file = LittleFS.open(_system_config_path, FILE_WRITE, true);
+    if (!config_file)
+        popFatalError("创建配置文件失败");
+
+    // Create json 
+    DynamicJsonDocument doc(2048);
+    doc["brightness"] = _config.brightness;
+    doc["volume"] = _config.volume;
+
+    // Save file 
+    if (serializeJson(doc, config_file) == 0)
+        popFatalError("写入配置文件失败");
+
+    config_file.close();
+}
+
+
+void HAL_Rachel::_system_config_init()
+{
+    delay(4000);
+
+
+    HAL_LOG_INFO("load config from fs");
+    loadSystemConfig();
+
+    HAL_LOG_INFO("update device from config");
+    updateSystemFromConfig();
+}

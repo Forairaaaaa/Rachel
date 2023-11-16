@@ -123,3 +123,13 @@ bool HAL::getAnyButton()
     }
     return false;
 }
+
+
+void HAL::updateSystemFromConfig()
+{
+    // Brightness 
+    _display->setBrightness(_config.brightness);
+
+    // Volume
+    setBeepVolume(_config.volume);
+}

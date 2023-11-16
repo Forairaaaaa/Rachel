@@ -49,6 +49,16 @@ namespace GAMEPAD
 }
 
 
+namespace CONFIG
+{
+    struct SystemConfig_t
+    {
+        uint8_t brightness = 128;
+        uint8_t volume = 255;
+    };
+}
+
+
 /**
  * @brief IMU data 
  * 
@@ -132,6 +142,7 @@ protected:
     time_t _time_buffer;
     IMU::ImuData_t _imu_data;
     bool _is_sd_card_ready;
+    CONFIG::SystemConfig_t _config;
 
 
     /**
@@ -235,4 +246,25 @@ public:
 
     static bool GetAnyButton() { return Get()->getAnyButton(); }
     virtual bool getAnyButton();
+
+
+    /**
+     * @brief System config APIs 
+     * 
+     */
+    // Load system config from fs 
+    static void LoadSystemConfig() { Get()->loadSystemConfig(); }
+    virtual void loadSystemConfig() {}
+
+    // Save config to fs 
+    static void SaveSystemConfig() { Get()->saveSystemConfig(); }
+    virtual void saveSystemConfig() {}
+
+    // System config setter getter 
+    static CONFIG::SystemConfig_t& GetSystemConfig() { return Get()->_config; }
+    static void SetSystemConfig(CONFIG::SystemConfig_t cfg) { Get()->_config = cfg; }
+
+    // Update device to the system config 
+    static void UpdateSystemFromConfig() { Get()->updateSystemFromConfig(); }
+    virtual void updateSystemFromConfig();
 };
