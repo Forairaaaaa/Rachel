@@ -37,7 +37,11 @@ void AppNofrendo::onResume()
 
 void AppNofrendo::onRunning()
 {
+#ifdef ESP_PLATFORM
     nofrendo_main(0, NULL);
+#else
+    HAL::PopFatalError("懒得抽象了");
+#endif
 }
 
 

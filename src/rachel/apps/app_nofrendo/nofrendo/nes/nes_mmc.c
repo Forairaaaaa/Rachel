@@ -221,7 +221,7 @@ void mmc_reset(void)
    if (mmc.intf->init)
       mmc.intf->init();
 
-   log_printf("reset memory mapper\n");
+   ___log_printf("reset memory mapper\n");
 }
 
 
@@ -253,7 +253,7 @@ mmc_t *mmc_create(rominfo_t *rominfo)
 
    mmc_setcontext(temp);
 
-   log_printf("created memory mapper: %s\n", (*map_ptr)->name);
+   ___log_printf("created memory mapper: %s\n", (*map_ptr)->name);
 
    return temp;
 }

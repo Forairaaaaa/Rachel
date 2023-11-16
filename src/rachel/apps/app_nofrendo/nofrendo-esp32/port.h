@@ -24,4 +24,3 @@ uint8_t nofendo_get_btn_down();
 uint8_t nofendo_get_btn_x();
 uint8_t nofendo_get_btn_y();
 char* nofendo_get_rom();
-

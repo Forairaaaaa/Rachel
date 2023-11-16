@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifdef ESP_PLATFORM
 #include <freertos/FreeRTOS.h>
 #include <freertos/timers.h>
 #include <freertos/task.h>
 #include <freertos/queue.h>
+#endif
 
 //Nes stuff wants to define this as well...
 #undef false
@@ -36,10 +38,13 @@
 #include "nesstate.h"
 #include <osd.h>
 #include <stdint.h>
+
+#ifdef ESP_PLATFORM
 #include "driver/i2s.h"
 #include "sdkconfig.h"
 #include "esp_timer.h"
 #include "esp_log.h"
+#endif
 
 // #include "display.h"
 // #include "gamepad.h"
@@ -60,14 +65,20 @@
 int showOverlay = 0;
 static void SaveState();
 static void LoadState();
+
+#ifdef ESP_PLATFORM
 TimerHandle_t timer;
+#endif
 
 //Seemingly, this will be called only once. Should call func with a freq of frequency,
 int osd_installtimer(int frequency, void *func, int funcsize, void *counter, int countersize)
 {
+#ifdef ESP_PLATFORM
     printf("Timer install, freq=%d\n", frequency);
     timer = xTimerCreate("nes", configTICK_RATE_HZ / frequency, pdTRUE, NULL, func);
     xTimerStart(timer, 0);
+#endif
+
     return 0;
 }
 
@@ -75,7 +86,9 @@ int osd_installtimer(int frequency, void *func, int funcsize, void *counter, int
 ** Audio
 */
 static void (*audio_callback)(void *buffer, int length) = NULL;
+#ifdef ESP_PLATFORM
 QueueHandle_t queue;
+#endif
 static short *audio_frame;
 
 void do_audio_frame()

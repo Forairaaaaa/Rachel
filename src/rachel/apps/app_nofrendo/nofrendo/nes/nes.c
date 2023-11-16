@@ -39,9 +39,12 @@
 #include <vid_drv.h>
 #include <nofrendo.h>
 #include "nesstate.h"
+
+#ifdef ESP_PLATFORM
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_system.h"
+#endif
 
 #define  NES_CLOCK_DIVIDER    12
 //#define  NES_MASTER_CLOCK     21477272.727272727272
@@ -364,6 +367,7 @@ extern bool forceConsoleReset;
 /* main emulation loop */
 void nes_emulate(void)
 {
+#ifdef ESP_PLATFORM
     int last_ticks, frames_to_render;
 
     osd_setsound(nes.apu->process);
@@ -435,6 +439,7 @@ void nes_emulate(void)
             totalElapsedTime = 0;
         }
     }
+#endif
 }
 
 static void mem_trash(uint8 *buffer, int length)

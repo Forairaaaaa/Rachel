@@ -124,7 +124,7 @@ static void rom_loadsram(rominfo_t *rominfo)
       {
          fread(rominfo->sram, SRAM_BANK_LENGTH, rominfo->sram_banks, fp);
          fclose(fp);
-         log_printf("Read battery RAM from %s.\n", fn);
+         ___log_printf("Read battery RAM from %s.\n", fn);
       }
    }
 }
@@ -156,7 +156,7 @@ static void rom_loadtrainer(unsigned char **rom, rominfo_t *rominfo)
 //      fread(rominfo->sram + TRAINER_OFFSET, TRAINER_LENGTH, 1, fp);
       memcpy(rominfo->sram + TRAINER_OFFSET, *rom, TRAINER_LENGTH);
       rom+=TRAINER_LENGTH;
-      log_printf("Read in trainer at $7000\n");
+      ___log_printf("Read in trainer at $7000\n");
    }
 }
 
@@ -238,7 +238,7 @@ static void rom_checkforpal(rominfo_t *rominfo)
    rominfo->flags |= ROM_FLAG_VERSUS;
    /* TODO: bad, BAD idea, calling nes_getcontextptr... */
    ppu_setpal(nes_getcontextptr()->ppu, vs_pal);
-   log_printf("Game specific palette found -- assuming VS. UniSystem\n");
+   ___log_printf("Game specific palette found -- assuming VS. UniSystem\n");
 }
 
 static FILE *rom_findrom(const char *filename, rominfo_t *rominfo)
@@ -377,10 +377,10 @@ static int rom_getheader(unsigned char **rom, rominfo_t *rominfo)
 
       /* @!?#@! DiskDude. */
       if (('D' == head.mapper_hinybble) && (0 == memcmp(head.reserved, "iskDude!", 8)))
-         log_printf("`DiskDude!' found in ROM header, ignoring high mapper nybble\n");
+         ___log_printf("`DiskDude!' found in ROM header, ignoring high mapper nybble\n");
       else
       {
-         log_printf("ROM header dirty, possible problem\n");
+         ___log_printf("ROM header dirty, possible problem\n");
          rominfo->mapper_number |= (head.mapper_hinybble & 0xF0);
       }
 
@@ -502,7 +502,7 @@ void rom_free(rominfo_t **rominfo)
    {
       /* TODO: bad idea calling nes_getcontextptr... */
       ppu_setdefaultpal(nes_getcontextptr()->ppu);
-      log_printf("Default NES palette restored\n");
+      ___log_printf("Default NES palette restored\n");
    }
 
    rom_savesram(*rominfo);

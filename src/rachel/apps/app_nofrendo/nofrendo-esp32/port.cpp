@@ -133,6 +133,7 @@ extern "C" void nofendo_pause_menu()
  * 
  */
 /* ------------------------------------------------------------------ */
+#ifdef ESP_PLATFORM
 #include <Arduino.h>
 #include <SD.h>
 #include <esp_partition.h>
@@ -295,4 +296,8 @@ static char* _load_rom_2_flash(File& rom_file)
 
     return (char*)romdata;
 }
+#else
+extern "C" char* nofendo_get_rom() { return nullptr; }
+#endif
 /* ------------------------------------------------------------------ */
+

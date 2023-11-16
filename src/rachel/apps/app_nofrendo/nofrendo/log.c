@@ -129,7 +129,9 @@ void log_assert(int expr, int line, const char *file, char *msg)
    else
       ___log_printf("ASSERT: line %d of %s\n", line, file);
 
+#ifdef ESP_PLATFORM
    asm("break.n 1");
+#endif
 //   exit(-1);
 }
 
