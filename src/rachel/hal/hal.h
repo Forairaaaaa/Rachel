@@ -54,7 +54,7 @@ namespace CONFIG
     struct SystemConfig_t
     {
         uint8_t brightness = 128;
-        uint8_t volume = 255;
+        uint8_t volume = 128;
     };
 }
 

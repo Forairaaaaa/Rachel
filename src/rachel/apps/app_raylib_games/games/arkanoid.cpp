@@ -187,7 +187,13 @@ namespace ARKANOID
         {
             // if (IsKeyPressed('P')) pause = !pause;
             if (HAL::GetButton(GAMEPAD::BTN_START))
+            {
+                while (HAL::GetButton(GAMEPAD::BTN_START))
+                    HAL::Delay(50);
+
                 pause = !pause;
+            }
+                
 
             if (!pause)
             {
@@ -277,6 +283,8 @@ namespace ARKANOID
                             {
                                 brick[i][j].active = false;
                                 ball.speed.y *= -1;
+
+                                CollisionCallback();
                             }
                             // Hit above
                             else if (((ball.position.y + ball.radius) >= (brick[i][j].position.y - brickSize.y/2)) &&
@@ -285,6 +293,8 @@ namespace ARKANOID
                             {
                                 brick[i][j].active = false;
                                 ball.speed.y *= -1;
+
+                                CollisionCallback();
                             }
                             // Hit left
                             else if (((ball.position.x + ball.radius) >= (brick[i][j].position.x - brickSize.x/2)) &&
@@ -293,6 +303,8 @@ namespace ARKANOID
                             {
                                 brick[i][j].active = false;
                                 ball.speed.x *= -1;
+
+                                CollisionCallback();
                             }
                             // Hit right
                             else if (((ball.position.x - ball.radius) <= (brick[i][j].position.x + brickSize.x/2)) &&
@@ -301,6 +313,8 @@ namespace ARKANOID
                             {
                                 brick[i][j].active = false;
                                 ball.speed.x *= -1;
+
+                                CollisionCallback();
                             }
                         }
                     }
@@ -400,6 +414,6 @@ namespace ARKANOID
 
     void CollisionCallback(void)
     {
-        HAL::Beep(GetRandomValue(3000, 6000), 20);
+        HAL::Beep(GetRandomValue(200, 600), 30);
     }
 }

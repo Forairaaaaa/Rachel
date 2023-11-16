@@ -89,9 +89,6 @@ void HAL_Rachel::saveSystemConfig()
 
 void HAL_Rachel::_system_config_init()
 {
-    delay(4000);
-
-
     HAL_LOG_INFO("load config from fs");
     loadSystemConfig();
 

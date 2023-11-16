@@ -38,11 +38,34 @@ void HAL_Rachel::_gamepad_init()
         gpio_reset_pin((gpio_num_t)i);
         pinMode(i, INPUT_PULLUP);
     }
+
+    _key_state_list.fill(false);
 }
 
 
 bool HAL_Rachel::getButton(GAMEPAD::GamePadButton_t button)
 {
-    return !(bool)(digitalRead(_gamepad_key_map[button]));
+    // return !(bool)(digitalRead(_gamepad_key_map[button]));
+
+    if (!digitalRead(_gamepad_key_map[button]))
+    {
+        // If just pressed 
+        if (!_key_state_list[button])
+        {
+            _key_state_list[button] = true;
+            beep(600, 20);
+        }
+
+        return true;
+    }
+
+    // If just released 
+    if (_key_state_list[button])
+    {
+        _key_state_list[button] = false;
+        beep(800, 20);
+    }
+
+    return false;
 }
 
