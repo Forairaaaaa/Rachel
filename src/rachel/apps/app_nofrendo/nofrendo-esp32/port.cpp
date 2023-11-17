@@ -243,10 +243,8 @@ static char* _load_rom_2_flash(File& rom_file)
         HAL::PopFatalError("没这分区啊朋友\n  (gamerom)");
 
 
-    HAL::GetCanvas()->clear(THEME_COLOR_DARK);
-    HAL::GetCanvas()->setTextScroll(true);
-    HAL::GetCanvas()->setCursor(0, 0);
-    HAL::GetCanvas()->printf("Erasing...\n");
+    // HAL::LoadTextFont24();
+    ProgressWindow("擦除中..", 0);
     HAL::CanvasUpdate();
 
 
@@ -273,7 +271,7 @@ static char* _load_rom_2_flash(File& rom_file)
         offset += bufsize;
 
         printf("%d%%\n", offset * 100 / romsize);
-        HAL::GetCanvas()->printf("%d%%\n", offset * 100 / romsize);
+        ProgressWindow("读取ROM..", offset * 100 / romsize);
         HAL::CanvasUpdate();
     }
 
