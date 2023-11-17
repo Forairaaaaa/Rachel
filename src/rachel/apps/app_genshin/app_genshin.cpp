@@ -27,12 +27,6 @@ void AppGenshin::onCreate()
 void AppGenshin::onResume()
 {
     spdlog::info("{} onResume", getAppName());
-
-    HAL::GetCanvas()->setTextScroll(true);
-    HAL::GetCanvas()->setCursor(0, 0);
-    HAL::GetCanvas()->clear(THEME_COLOR_LIGHT);
-    HAL::LoadTextFont24();
-    HAL::GetCanvas()->setTextColor(THEME_COLOR_DARK, THEME_COLOR_LIGHT);
 }
 
 
@@ -41,81 +35,55 @@ using namespace SYSTEM::UI;
 
 void AppGenshin::onRunning()
 {
-    // // Every seconds 
-    // if ((HAL::Millis() - _data.count) > 1000)
+    HAL::LoadTextFont24();
+
+    // // Loading 
+    // std::vector<std::string> title_list = {"传送松山湖..", "打捞..", "CPU热拔插.."};
+    // for (auto& title : title_list)
     // {
-    //     spdlog::info("{}: Hi", getAppName());
-
-        
-    //     HAL::GetCanvas()->printf(" Hi!");
-    //     HAL::CanvasUpdate();
-
-
-    //     _data.count = HAL::Millis();
+    //     for (int i = 10; i <= 110; i += 20)
+    //     {
+    //         ProgressWindow(title, i);
+    //         HAL::CanvasUpdate();
+    //         HAL::Delay(100);
+    //     }
     // }
 
+    // Launch 
+    HAL::GetCanvas()->fillScreen(THEME_COLOR_LIGHT);
+    HAL::CanvasUpdate();
+    HAL::Delay(2000);
 
-    // // Press Select to quit  
-    // if (HAL::GetButton(GAMEPAD::BTN_SELECT))
-    //     destroyApp();
+    HAL::GetCanvas()->setTextSize(3);
+    HAL::GetCanvas()->drawCenterString("原神", 120, 60);
+    HAL::CanvasUpdate();
+    HAL::Delay(2000);
 
-
-    
-
-
-
-
-    auto select_menu = SelectMenu();
-
-    std::vector<std::string> test = {
-        "[MENU TYPE]",
-        "Left",
-        "Center",
-        "Right",
-        "Settings",
-        "Quit"
-    };
-
-    std::vector<std::string> settings = {
-        "[SETTINGS]",
-        "asdasdasd",
-        "9879ht",
-        "5465gmiokn",
-        "1221d3ffff",
-        "-=-=--=-dd",
-        "00000000",
-        ":)",
-        "-=-=--=-dd",
-        "00000000",
-        ":)",
-        "Back"
-    };
-
-    auto alignment = SelectMenu::ALIGN_LEFT;
-    while (1)
+    HAL::GetCanvas()->setTextSize(1);
+    HAL::GetCanvas()->fillScreen(THEME_COLOR_LIGHT);
+    HAL::GetCanvas()->setCursor(32, HAL::GetCanvas()->height() / 3);
+    std::vector<std::string> item_list = {"火", "水", "风", "雷", "草", "冰"};
+    for (auto& i : item_list)
     {
-        auto result = select_menu.waitResult(test, alignment);
-
-        if (result == 1)
-            alignment = SelectMenu::ALIGN_LEFT;
-        else if (result == 2)
-            alignment = SelectMenu::ALIGN_CENTER;
-        else if (result == 3)
-            alignment = SelectMenu::ALIGN_RIGHT;
-
-        else if (result == 4)
-        {
-            while (1)
-            {
-                result = select_menu.waitResult(settings, alignment);
-                if (result == settings.size() - 1)
-                    break;
-            }
-        }
-
-        else
-            break;
+        HAL::GetCanvas()->print(i.c_str());
+        HAL::CanvasUpdate();
+        HAL::Delay(400);
     }
+
+    int cursor_x = HAL::GetCanvas()->getCursorX();
+    int cursor_y = HAL::GetCanvas()->getCursorY();
+
+    HAL::GetCanvas()->print("岩");
+    HAL::GetCanvas()->fillRect(cursor_x + 12, cursor_y, 24, 24, THEME_COLOR_LIGHT);
+    HAL::CanvasUpdate();
+    HAL::Delay(2000);
+
+    HAL::GetCanvas()->setCursor(cursor_x, cursor_y);
+    HAL::GetCanvas()->print("岩");
+    HAL::CanvasUpdate();
+    HAL::Delay(1000);
+
+    HAL::PopFatalError("你在期待什么? O.o");
 
 
     destroyApp();
