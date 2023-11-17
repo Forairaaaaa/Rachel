@@ -95,7 +95,7 @@ int SelectMenu::waitResult(std::vector<std::string>& itemList)
         if ((HAL::Millis() - _data.menu_update_count) > _config.menu_update_interval)
         {
             // Update navigation 
-            if (HAL::GetButton(GAMEPAD::BTN_UP))
+            if (HAL::GetButton(GAMEPAD::BTN_UP) || HAL::GetButton(GAMEPAD::BTN_LEFT))
             {
                 if (!_data.menu_wait_button_released)
                 {
@@ -103,7 +103,7 @@ int SelectMenu::waitResult(std::vector<std::string>& itemList)
                     _data.menu_wait_button_released = true;
                 }
             }
-            else if (HAL::GetButton(GAMEPAD::BTN_DOWN))
+            else if (HAL::GetButton(GAMEPAD::BTN_DOWN) || HAL::GetButton(GAMEPAD::BTN_RIGHT))
             {
                 if (!_data.menu_wait_button_released)
                 {

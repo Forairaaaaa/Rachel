@@ -60,62 +60,21 @@ void AppScreencast::onRunning()
     //     destroyApp();
 
 
-    
-
-
-
-
-    auto select_menu = SelectMenu();
-
-    std::vector<std::string> test = {
-        "[MENU TYPE]",
-        "Left",
-        "Center",
-        "Right",
-        "Settings",
-        "Quit"
-    };
-
-    std::vector<std::string> settings = {
-        "[SETTINGS]",
-        "asdasdasd",
-        "9879ht",
-        "5465gmiokn",
-        "1221d3ffff",
-        "-=-=--=-dd",
-        "00000000",
-        ":)",
-        "-=-=--=-dd",
-        "00000000",
-        ":)",
-        "Back"
-    };
-
-    auto alignment = SelectMenu::ALIGN_LEFT;
-    while (1)
+    HAL::LoadTextFont24();
+    for (int i = 0; i < 100; i++)
     {
-        auto result = select_menu.waitResult(test, alignment);
-
-        if (result == 1)
-            alignment = SelectMenu::ALIGN_LEFT;
-        else if (result == 2)
-            alignment = SelectMenu::ALIGN_CENTER;
-        else if (result == 3)
-            alignment = SelectMenu::ALIGN_RIGHT;
-
-        else if (result == 4)
-        {
-            while (1)
-            {
-                result = select_menu.waitResult(settings, alignment);
-                if (result == settings.size() - 1)
-                    break;
-            }
-        }
-
-        else
-            break;
+        ProgressWindow("正在检测智商..", i);
+        HAL::CanvasUpdate();
+        HAL::Delay(50);
     }
+
+    for (int i = 0; i < 100; i++)
+    {
+        ProgressWindow("啊?", i, true);
+        HAL::CanvasUpdate();
+        HAL::Delay(50);
+    }
+
 
 
     destroyApp();
