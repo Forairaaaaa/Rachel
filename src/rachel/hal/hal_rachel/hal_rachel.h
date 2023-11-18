@@ -83,6 +83,7 @@ public:
     void setSystemTime(tm dateTime) override;
     void updateImuData() override;
     void beep(float frequency, uint32_t duration) override;
+    void beepStop() override;
     void setBeepVolume(uint8_t volume) override;
     void loadSystemConfig() override;
     void saveSystemConfig() override;

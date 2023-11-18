@@ -1,7 +1,7 @@
 /**
  * @file app_music.cpp
  * @author Forairaaaaa
- * @brief 
+ * @brief Ref: https://github.com/robsoncouto/arduino-songs/tree/master
  * @version 0.1
  * @date 2023-11-04
  * 
@@ -13,9 +13,36 @@
 #include "../../hal/hal.h"
 #include "../assets/theme/theme.h"
 #include "../utils/system/ui/ui.h"
+#include <Arduino.h>
+#include <SD.h>
+#include <ArduinoJson.h>
 
 
 using namespace MOONCAKE::APPS;
+using namespace SYSTEM::UI;
+
+
+struct BuzzMusic_t
+{
+    int tempo = 180;
+    size_t melodySize = 0; 
+    int* melody = nullptr;
+
+    BuzzMusic_t(int tempo, size_t melodySize)
+    {
+        this->tempo = tempo;
+        this->melodySize = melodySize;
+        melody = new int[this->melodySize];
+    }
+
+    ~BuzzMusic_t()
+    {
+        delete[] this->melody;
+    }
+};
+void _load_json_buzz_music();
+void _parse_json_buzz_music(File& musicFile);
+void _play_buzz_muisc(BuzzMusic_t* buzzMusic);
 
 
 void AppMusic::onCreate()
@@ -27,98 +54,143 @@ void AppMusic::onCreate()
 void AppMusic::onResume()
 {
     spdlog::info("{} onResume", getAppName());
-
-    HAL::GetCanvas()->setTextScroll(true);
-    HAL::GetCanvas()->setCursor(0, 0);
-    HAL::GetCanvas()->clear(THEME_COLOR_LIGHT);
-    HAL::LoadTextFont24();
-    HAL::GetCanvas()->setTextColor(THEME_COLOR_DARK, THEME_COLOR_LIGHT);
 }
-
-
-using namespace SYSTEM::UI;
 
 
 void AppMusic::onRunning()
 {
-    // // Every seconds 
-    // if ((HAL::Millis() - _data.count) > 1000)
-    // {
-    //     spdlog::info("{}: Hi", getAppName());
-
-        
-    //     HAL::GetCanvas()->printf(" Hi!");
-    //     HAL::CanvasUpdate();
+    _load_json_buzz_music();
+}
 
 
-    //     _data.count = HAL::Millis();
-    // }
+static const String _music_path = "/buzz_music";
+
+void _load_json_buzz_music()
+{
+    if (!HAL::CheckSdCard())
+        HAL::PopFatalError("没SD卡啊朋友");
+    spdlog::info("try loading music from SD card in {}", _music_path.c_str());
 
 
-    // // Press Select to quit  
-    // if (HAL::GetButton(GAMEPAD::BTN_SELECT))
-    //     destroyApp();
-
-
-    
-
-
-
-
-    auto select_menu = SelectMenu();
-
-    std::vector<std::string> test = {
-        "[MENU TYPE]",
-        "Left",
-        "Center",
-        "Right",
-        "Settings",
-        "Quit"
-    };
-
-    std::vector<std::string> settings = {
-        "[SETTINGS]",
-        "asdasdasd",
-        "9879ht",
-        "5465gmiokn",
-        "1221d3ffff",
-        "-=-=--=-dd",
-        "00000000",
-        ":)",
-        "-=-=--=-dd",
-        "00000000",
-        ":)",
-        "Back"
-    };
-
-    auto alignment = SelectMenu::ALIGN_LEFT;
-    while (1)
+    // Check path 
+    if (!SD.exists(_music_path))
     {
-        auto result = select_menu.waitResult(test, alignment);
-
-        if (result == 1)
-            alignment = SelectMenu::ALIGN_LEFT;
-        else if (result == 2)
-            alignment = SelectMenu::ALIGN_CENTER;
-        else if (result == 3)
-            alignment = SelectMenu::ALIGN_RIGHT;
-
-        else if (result == 4)
-        {
-            while (1)
-            {
-                result = select_menu.waitResult(settings, alignment);
-                if (result == settings.size() - 1)
-                    break;
-            }
-        }
-
-        else
-            break;
+        std::string msg = "音乐路径不存在\n  (";
+        msg += _music_path.c_str();
+        msg += ")";
+        HAL::PopFatalError(msg);
     }
 
 
-    destroyApp();
+    // List music dir 
+    auto music_directory = SD.open(_music_path);
+    std::vector<std::string> music_list = {"[MUSIC]"};
+    while (1)
+    {
+        File entry =  music_directory.openNextFile();
+
+        if (!entry)
+            break;
+
+        if (!entry.isDirectory())
+        {
+            music_list.push_back(entry.name());
+            spdlog::info("get file: {} size: {}", entry.name(), entry.size());
+        }
+        
+        entry.close();    
+    }
+    if (music_list.size() == 1)
+        HAL::PopFatalError("没音乐啊朋友");
+
+
+    // Create select menu
+    SelectMenu menu;
+    auto selected_item = menu.waitResult(music_list);
+
+
+    // Try open 
+    String music_path = _music_path;
+    music_path += "/";
+    music_path += music_list[selected_item].c_str();
+    spdlog::info("try open {}", music_path.c_str());
+    auto music_file = SD.open(music_path, FILE_READ);
+
+
+    _parse_json_buzz_music(music_file);
+}
+
+
+void _parse_json_buzz_music(File& musicFile)
+{
+    int melody_tempo = 0;
+    size_t melody_size = 0;
+    BuzzMusic_t* buzz_music = nullptr;
+
+    // Parse json
+    {
+        DynamicJsonDocument doc(2048);
+        deserializeJson(doc, musicFile);
+
+        melody_tempo = doc["tempo"];
+        melody_size = doc["melody"].size();
+        spdlog::info("melody tempo: {} size: {}", melody_tempo, melody_size);
+
+        buzz_music = new BuzzMusic_t(melody_tempo, melody_size);
+        for (int i = 0; i < doc["melody"].size(); i++)
+            buzz_music->melody[i] = doc["melody"][i];
+    }
+
+    // Play 
+    _play_buzz_muisc(buzz_music);
+
+    musicFile.close();
+    delete buzz_music;
+}
+
+
+void _play_buzz_muisc(BuzzMusic_t* buzzMusic)
+{
+    // sizeof gives the number of bytes, each int value is composed of two bytes (16 bits)
+    // there are two values per note (pitch and duration), so for each note there are four bytes
+    int notes = buzzMusic->melodySize / 2;
+
+    // this calculates the duration of a whole note in ms
+    int wholenote = (60000 * 4) / buzzMusic->tempo;
+
+    int divider = 0, noteDuration = 0;
+
+    // iterate over the notes of the melody.
+    // Remember, the array is twice the number of notes (notes + durations)
+    for (int thisNote = 0; thisNote < notes * 2; thisNote = thisNote + 2) 
+    {
+        // calculates the duration of each note
+        divider = buzzMusic->melody[thisNote + 1];
+
+        if (divider > 0) 
+        {
+            // regular note, just proceed
+            noteDuration = (wholenote) / divider;
+        } 
+        else if (divider < 0) 
+        {
+            // dotted notes are represented with negative durations!!
+            noteDuration = (wholenote) / abs(divider);
+            noteDuration *= 1.5; // increases the duration in half for dotted notes
+        }
+
+        // we only play the note for 90% of the duration, leaving 10% as a pause
+        // tone(buzzer, melody[thisNote], noteDuration * 0.9);
+        HAL::Beep(buzzMusic->melody[thisNote], noteDuration * 0.9);
+
+        // Wait for the specief duration before playing the next note.
+        // delay(noteDuration);
+        HAL::Delay(noteDuration);
+
+        // stop the waveform generation before the next note.
+        // noTone(buzzer);
+        HAL::BeepStop();
+    }
 }
 
 

@@ -91,6 +91,12 @@ void HAL_Rachel::beep(float frequency, uint32_t duration)
 }
 
 
+void HAL_Rachel::beepStop()
+{
+    noTone(HAL_PIN_BUZZ);
+}
+
+
 void HAL_Rachel::setBeepVolume(uint8_t volume)
 {
     // _spk->setVolume(volume);
