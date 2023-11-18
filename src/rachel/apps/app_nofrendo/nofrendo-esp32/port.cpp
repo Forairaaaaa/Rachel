@@ -137,6 +137,7 @@ extern "C" void nofendo_pause_menu()
 #include <Arduino.h>
 #include <SD.h>
 #include <esp_partition.h>
+#include <cstring>
 
 
 static char* _load_rom_2_ram(File& rom_file);
@@ -173,8 +174,11 @@ extern "C" char* nofendo_get_rom()
 
         if (!entry.isDirectory())
         {
-            rom_list.push_back(entry.name());
-            printf("get file: %s size: %ld\n", entry.name(), entry.size());
+            if (std::strstr(entry.name(), ".nes") != NULL)
+            {
+                rom_list.push_back(entry.name());
+                printf("get file: %s size: %ld\n", entry.name(), entry.size());
+            }
         }
         
         entry.close();    
