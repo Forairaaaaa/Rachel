@@ -12,7 +12,7 @@
 #include "spdlog/spdlog.h"
 #include "../../hal/hal.h"
 #include "../assets/theme/theme.h"
-#include "../utils/system/ui/ui.h"
+#include <BleGamepad.h>
 
 
 using namespace MOONCAKE::APPS;
@@ -27,97 +27,102 @@ void AppBle_controller::onCreate()
 void AppBle_controller::onResume()
 {
     spdlog::info("{} onResume", getAppName());
-
-    HAL::GetCanvas()->setTextScroll(true);
-    HAL::GetCanvas()->setCursor(0, 0);
-    HAL::GetCanvas()->clear(THEME_COLOR_LIGHT);
-    HAL::LoadTextFont24();
-    HAL::GetCanvas()->setTextColor(THEME_COLOR_DARK, THEME_COLOR_LIGHT);
 }
-
-
-using namespace SYSTEM::UI;
 
 
 void AppBle_controller::onRunning()
 {
-    // // Every seconds 
-    // if ((HAL::Millis() - _data.count) > 1000)
-    // {
-    //     spdlog::info("{}: Hi", getAppName());
+    HAL::LoadTextFont24();
+    HAL::GetCanvas()->fillScreen(THEME_COLOR_DARK);
+    HAL::GetCanvas()->setTextColor(THEME_COLOR_LIGHT, THEME_COLOR_DARK);
+    HAL::GetCanvas()->drawCenterString("已开启BLE手柄", 120, 120 - 48);
+    HAL::GetCanvas()->drawCenterString("Rachel BLE Gamepad", 122, 120 - 12);
+    HAL::CanvasUpdate();
 
-        
-    //     HAL::GetCanvas()->printf(" Hi!");
-    //     HAL::CanvasUpdate();
-
-
-    //     _data.count = HAL::Millis();
-    // }
+    // Ram is limit.. 
+    HAL::GetCanvas()->deleteSprite();
 
 
-    // // Press Select to quit  
-    // if (HAL::GetButton(GAMEPAD::BTN_SELECT))
-    //     destroyApp();
+    auto ble_gamepad = new BleGamepad("Rachel BLE Gamepad");
+    BleGamepadConfiguration bleGamepadConfig;
+    bleGamepadConfig.setAutoReport(false);
+    ble_gamepad->begin(&bleGamepadConfig);
 
 
-    
-
-
-
-
-    auto select_menu = SelectMenu();
-
-    std::vector<std::string> test = {
-        "[MENU TYPE]",
-        "Left",
-        "Center",
-        "Right",
-        "Settings",
-        "Quit"
-    };
-
-    std::vector<std::string> settings = {
-        "[SETTINGS]",
-        "asdasdasd",
-        "9879ht",
-        "5465gmiokn",
-        "1221d3ffff",
-        "-=-=--=-dd",
-        "00000000",
-        ":)",
-        "-=-=--=-dd",
-        "00000000",
-        ":)",
-        "Back"
-    };
-
-    auto alignment = SelectMenu::ALIGN_LEFT;
+    uint16_t lx = 0;
+    uint16_t ly = 0;
     while (1)
     {
-        auto result = select_menu.waitResult(test, alignment);
+        HAL::Delay(20);
 
-        if (result == 1)
-            alignment = SelectMenu::ALIGN_LEFT;
-        else if (result == 2)
-            alignment = SelectMenu::ALIGN_CENTER;
-        else if (result == 3)
-            alignment = SelectMenu::ALIGN_RIGHT;
-
-        else if (result == 4)
+        if (ble_gamepad->isConnected())
         {
-            while (1)
-            {
-                result = select_menu.waitResult(settings, alignment);
-                if (result == settings.size() - 1)
-                    break;
-            }
+            lx = 16384;
+            ly = 16384;
+            if (HAL::GetButton(GAMEPAD::BTN_UP))
+                ly = 0;
+            else if (HAL::GetButton(GAMEPAD::BTN_DOWN))
+                ly = 32767;
+            else if (HAL::GetButton(GAMEPAD::BTN_LEFT))
+                lx = 0;
+            else if (HAL::GetButton(GAMEPAD::BTN_RIGHT))
+                lx = 32767;
+            ble_gamepad->setX(lx);
+            ble_gamepad->setY(ly);
+
+
+            if (HAL::GetButton(GAMEPAD::BTN_Y))
+                ble_gamepad->press(BUTTON_1);
+            else
+                ble_gamepad->release(BUTTON_1);
+
+            if (HAL::GetButton(GAMEPAD::BTN_X))
+                ble_gamepad->press(BUTTON_2);
+            else
+                ble_gamepad->release(BUTTON_2);
+
+            if (HAL::GetButton(GAMEPAD::BTN_A))
+                ble_gamepad->press(BUTTON_3);
+            else
+                ble_gamepad->release(BUTTON_3);
+
+            if (HAL::GetButton(GAMEPAD::BTN_B))
+                ble_gamepad->press(BUTTON_4);
+            else
+                ble_gamepad->release(BUTTON_4);
+
+            if (HAL::GetButton(GAMEPAD::BTN_START))
+                ble_gamepad->press(BUTTON_5);
+            else
+                ble_gamepad->release(BUTTON_5);
+
+            if (HAL::GetButton(GAMEPAD::BTN_SELECT))
+                ble_gamepad->press(BUTTON_6);
+            else
+                ble_gamepad->release(BUTTON_6);
+            
+            ble_gamepad->sendReport();
         }
 
-        else
-            break;
+        if (HAL::GetButton(GAMEPAD::BTN_LEFT_STICK))
+        {
+            // Long press quit 
+            int count = 0;
+            while (HAL::GetButton(GAMEPAD::BTN_LEFT_STICK))
+            {
+                HAL::Delay(50);
+                count++;
+                if (count > 1000 / 50)
+                {
+                    HAL::Reboot();
+                    // break;
+                }
+            }
+        }
     }
 
-
+    delete ble_gamepad;
+    HAL::GetCanvas()->createSprite(HAL::GetDisplay()->width(), HAL::GetDisplay()->height());
     destroyApp();
 }
 

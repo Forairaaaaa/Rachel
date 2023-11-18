@@ -1,7 +1,7 @@
 /**
  * @file app_music.h
  * @author Forairaaaaa
- * @brief Ref: https://github.com/robsoncouto/arduino-songs/tree/master
+ * @brief 
  * @version 0.1
  * @date 2023-11-04
  * 

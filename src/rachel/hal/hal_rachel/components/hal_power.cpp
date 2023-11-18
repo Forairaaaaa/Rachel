@@ -32,5 +32,6 @@ void HAL_Rachel::powerOff()
 
 void HAL_Rachel::reboot()
 {
+    beepStop();
     esp_restart();
 }

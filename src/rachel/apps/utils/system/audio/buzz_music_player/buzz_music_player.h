@@ -1,7 +1,7 @@
 /**
  * @file buzz_music_player.h
  * @author Forairaaaaa
- * @brief 
+ * @brief Ref: https://github.com/robsoncouto/arduino-songs
  * @version 0.1
  * @date 2023-11-18
  * 
