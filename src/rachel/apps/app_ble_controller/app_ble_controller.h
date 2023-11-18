@@ -9,7 +9,7 @@
  * 
  */
 #include <mooncake.h>
-#include "assets/icon_app_ble_gamepad.h"
+#include "assets/icon_app_ble_gamepad.hpp"
 
 
 namespace MOONCAKE::APPS

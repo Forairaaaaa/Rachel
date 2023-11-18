@@ -9,7 +9,7 @@
  * 
  */
 #include <mooncake.h>
-#include "assets/icon_app_music.h"
+#include "assets/icon_app_music.hpp"
 
 
 namespace MOONCAKE::APPS

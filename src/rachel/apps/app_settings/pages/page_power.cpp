@@ -1,22 +1,23 @@
 /**
- * @file page_power.hpp
+ * @file page_power.cpp
  * @author Forairaaaaa
  * @brief 
  * @version 0.1
- * @date 2023-11-13
+ * @date 2023-11-18
  * 
  * @copyright Copyright (c) 2023
  * 
  */
-#pragma once
+#include "../app_settings.h"
 #include "../../utils/system/ui/ui.h"
 #include "../../../hal/hal.h"
 
 
+using namespace MOONCAKE::APPS;
 using namespace SYSTEM::UI;
 
 
-void page_power(SelectMenu& selectMenu)
+void AppSettings::_page_power()
 {
     std::vector<std::string> items = {
         "[POWER]",
@@ -25,7 +26,7 @@ void page_power(SelectMenu& selectMenu)
         "Back"
     };
 
-    auto selected = selectMenu.waitResult(items);
+    auto selected = _data.select_menu->waitResult(items);
     if (selected == 1)
         HAL::PowerOff();
     else if (selected == 2)

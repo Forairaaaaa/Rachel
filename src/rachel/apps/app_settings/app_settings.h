@@ -9,7 +9,8 @@
  * 
  */
 #include <mooncake.h>
-#include "assets/icon_app_settings.h"
+#include "assets/icon_app_settings.hpp"
+#include "../../utils/system/ui/ui.h"
 
 
 namespace MOONCAKE::APPS
@@ -23,9 +24,16 @@ namespace MOONCAKE::APPS
     private:
         struct Data_t
         {
-            unsigned long count = 0;
+            bool is_config_changed = false;
+            SYSTEM::UI::SelectMenu* select_menu = nullptr;
         };
         Data_t _data;
+        void _page_index();
+        void _page_power();
+        void _page_sound();
+        void _page_display();
+        void _page_time();
+        void _page_about();
 
     public:
         void onCreate() override;

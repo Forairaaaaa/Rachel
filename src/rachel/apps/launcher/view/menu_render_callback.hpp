@@ -12,7 +12,7 @@
 #include "../../../hal/hal.h"
 #include "../../utils/smooth_menu/simple_menu/simple_menu.h"
 #include "../../assets/theme/theme.h"
-#include "../assets/launcher_bottom_panel.h"
+#include "../assets/launcher_bottom_panel.hpp"
 #include <cmath>
 #include <string>
 

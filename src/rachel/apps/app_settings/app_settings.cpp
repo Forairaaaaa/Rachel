@@ -12,15 +12,16 @@
 #include "spdlog/spdlog.h"
 #include "../../hal/hal.h"
 #include "../assets/theme/theme.h"
-#include "pages/page_index.hpp"
 
 
 using namespace MOONCAKE::APPS;
+using namespace SYSTEM::UI;
 
 
 void AppSettings::onCreate()
 {
     spdlog::info("{} onCreate", getAppName());
+    _data.select_menu = new SelectMenu;
 }
 
 
@@ -32,13 +33,28 @@ void AppSettings::onResume()
 
 void AppSettings::onRunning()
 {
-    auto menu_menu = SelectMenu();
-    page_index(menu_menu);
+    // Create menu and load pages 
+    _page_index();
+
+    // If config changed 
+    if (_data.is_config_changed)
+    {
+        std::vector<std::string> items = {
+            "[SAVE CHANGES?]",
+            "Yes",
+            "No"
+        };
+        auto selected_item = _data.select_menu->waitResult(items);
+        if (selected_item == 1)
+            HAL::SaveSystemConfig();
+    }
+
     destroyApp();
 }
 
 
 void AppSettings::onDestroy()
 {
+    delete _data.select_menu;
     spdlog::info("{} onDestroy", getAppName());
 }

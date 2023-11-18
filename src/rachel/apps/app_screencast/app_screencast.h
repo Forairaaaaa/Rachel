@@ -9,7 +9,7 @@
  * 
  */
 #include <mooncake.h>
-#include "assets/icon_app_screen_cast.h"
+#include "assets/icon_app_screen_cast.hpp"
 
 
 namespace MOONCAKE::APPS

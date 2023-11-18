@@ -9,7 +9,7 @@
  * 
  */
 #include <mooncake.h>
-#include "../assets/icons/icons.h"
+#include "assets/icon_app_nofrendo.hpp"
 
 
 namespace MOONCAKE::APPS
@@ -30,7 +30,7 @@ namespace MOONCAKE::APPS
     class AppNofrendo_Packer : public APP_PACKER_BASE
     {
         std::string getAppName() override { return "Nofrendo"; }
-        void* getAppIcon() override { return (void*)image_data_icon_app_default; }
+        void* getAppIcon() override { return (void*)image_data_icon_app_nofrendo; }
         void* newApp() override { return new AppNofrendo; }
         void deleteApp(void *app) override { delete (AppNofrendo*)app; }
     };

@@ -53,8 +53,8 @@ namespace CONFIG
 {
     struct SystemConfig_t
     {
-        uint8_t brightness = 128;
-        uint8_t volume = 128;
+        uint8_t brightness = 127;
+        uint8_t volume = 127;
     };
 }
 
@@ -181,6 +181,7 @@ public:
     static void Reboot() { Get()->reboot(); }
     virtual void reboot() {}
 
+    // Set time to RTC 
     static void SetSystemTime(tm dateTime) { return Get()->setSystemTime(dateTime); }
     virtual void setSystemTime(tm dateTime) {}
 

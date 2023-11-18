@@ -15,7 +15,6 @@
 #include <LovyanGFX.hpp>
 #include "../assets/theme/theme.h"
 #include "../assets/icons/icons.h"
-#include "assets/launcher_bottom_panel.h"
 
 
 using namespace MOONCAKE::APPS;

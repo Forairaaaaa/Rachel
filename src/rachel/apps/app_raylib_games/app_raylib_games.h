@@ -9,7 +9,7 @@
  * 
  */
 #include <mooncake.h>
-#include "assets/icon_app_raylib_games.h"
+#include "assets/icon_app_raylib_games.hpp"
 
 
 namespace MOONCAKE::APPS
