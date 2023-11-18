@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2023
  * 
  */
-#include "app_ble_controller.h"
+#include "app_ble_gamepad.h"
 #include "spdlog/spdlog.h"
 #include "../../hal/hal.h"
 #include "../assets/theme/theme.h"
@@ -18,19 +18,19 @@
 using namespace MOONCAKE::APPS;
 
 
-void AppBle_controller::onCreate()
+void AppBle_gamepad::onCreate()
 {
     spdlog::info("{} onCreate", getAppName());
 }
 
 
-void AppBle_controller::onResume()
+void AppBle_gamepad::onResume()
 {
     spdlog::info("{} onResume", getAppName());
 }
 
 
-void AppBle_controller::onRunning()
+void AppBle_gamepad::onRunning()
 {
     HAL::LoadTextFont24();
     HAL::GetCanvas()->fillScreen(THEME_COLOR_DARK);
@@ -127,7 +127,7 @@ void AppBle_controller::onRunning()
 }
 
 
-void AppBle_controller::onDestroy()
+void AppBle_gamepad::onDestroy()
 {
     spdlog::info("{} onDestroy", getAppName());
 }
