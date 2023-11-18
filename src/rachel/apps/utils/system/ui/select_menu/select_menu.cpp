@@ -113,11 +113,11 @@ int SelectMenu::waitResult(std::vector<std::string>& itemList)
             }
 
             // If select 
-            else if (HAL::GetButton(GAMEPAD::BTN_A))
+            else if (HAL::GetButton(GAMEPAD::BTN_A) || HAL::GetButton(GAMEPAD::BTN_LEFT_STICK))
             {
                 _data.menu->getSelector()->pressed();
                 // Wait release 
-                while (HAL::GetButton(GAMEPAD::BTN_A))
+                while (HAL::GetButton(GAMEPAD::BTN_A) || HAL::GetButton(GAMEPAD::BTN_LEFT_STICK))
                 {
                     _data.menu->update(HAL::Millis());
                     HAL::CanvasUpdate();

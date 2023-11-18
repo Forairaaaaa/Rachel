@@ -45,6 +45,7 @@ namespace GAMEPAD
         BTN_A,
         BTN_B,
         BTN_LEFT_STICK,
+        GAMEPAD_BUTTON_NUM,
     };
 }
 
