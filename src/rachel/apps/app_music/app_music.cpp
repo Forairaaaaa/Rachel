@@ -90,6 +90,12 @@ void AppMusic::onRunning()
 
         if (selected_item == music_list.size() - 1)
             break;
+
+        // ~ 
+        HAL::GetCanvas()->fillSmoothRoundRect((240 - 180) / 2,  (240 - 120) / 2, 180, 120, 20, THEME_COLOR_LIGHT);
+        HAL::GetCanvas()->setTextColor(THEME_COLOR_DARK, THEME_COLOR_LIGHT);
+        HAL::GetCanvas()->drawCenterString("Playing..", 120, 120 - 12);
+        HAL::CanvasUpdate();
         
         // Play 
         String music_path = _music_path;
