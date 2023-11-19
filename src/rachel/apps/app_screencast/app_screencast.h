@@ -1,7 +1,7 @@
 /**
  * @file app_screencast.h
  * @author Forairaaaaa
- * @brief 
+ * @brief Ref: https://github.com/lovyan03/ESP32_ScreenShotReceiver
  * @version 0.1
  * @date 2023-11-04
  * 
@@ -20,13 +20,6 @@ namespace MOONCAKE::APPS
     */
     class AppScreencast : public APP_BASE
     {
-    private:
-        struct Data_t
-        {
-            unsigned long count = 0;
-        };
-        Data_t _data;
-
     public:
         void onCreate() override;
         void onResume() override;
