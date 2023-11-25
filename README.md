@@ -2,6 +2,8 @@
 
 
 
+![](https://github.com/Forairaaaaa/rachel_sdk_simulator/blob/main/pics/cover_smaller.jpg?raw=true)
+
 # Rachel SDK
 
 ## 编译

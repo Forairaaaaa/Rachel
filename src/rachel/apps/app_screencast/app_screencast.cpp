@@ -113,7 +113,7 @@ void AppScreencast::onRunning()
 
     // :(
     HAL::Reboot();
-    
+
     destroyApp();
 }
 #else
