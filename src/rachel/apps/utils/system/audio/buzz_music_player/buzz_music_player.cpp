@@ -11,14 +11,17 @@
 #include <mooncake.h>
 #include "buzz_music_player.h"
 #include "../../../hal/hal.h"
+#ifdef ESP_PLATFORM
 #include <Arduino.h>
 #include <SD.h>
 #include <ArduinoJson.h>
+#endif
 
 
 using namespace SYSTEM::AUDIO;
 
 
+#ifdef ESP_PLATFORM
 void BuzzMusicPlayer::playRaw(BuzzMusic_t* buzzMusic)
 {
     // sizeof gives the number of bytes, each int value is composed of two bytes (16 bits)
@@ -97,3 +100,9 @@ void BuzzMusicPlayer::playFromSdCard(const char* buzzMusicPath)
     
     delete buzz_music;
 }
+#else
+
+void playRaw(BuzzMusic_t* buzzMusic) {}
+void playFromSdCard(const char* buzzMusicPath) {}
+
+#endif

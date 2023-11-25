@@ -28,7 +28,6 @@ namespace MOONCAKE::APPS
         Data_t _data;
 
     public:
-        void onCreate() override;
         void onResume() override;
         void onRunning() override;
         void onDestroy() override;

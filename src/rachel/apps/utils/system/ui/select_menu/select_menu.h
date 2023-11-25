@@ -17,6 +17,10 @@
 
 namespace SYSTEM::UI
 {
+    /**
+     * @brief Select menu, 选择菜单 
+     * 
+     */
     class SelectMenu
     {
     public:
@@ -66,7 +70,7 @@ namespace SYSTEM::UI
         
 
         /**
-         * @brief Render the menu and blocked untill item selected 
+         * @brief Render the menu and blocked untill item selected, 渲染一个菜单并等待选择 
          * 
          * @param itemList Items to be select, the first element will be "title", which will not be selected 
          * @return int selected item index 

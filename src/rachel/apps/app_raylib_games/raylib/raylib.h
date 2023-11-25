@@ -1,7 +1,7 @@
 /**
  * @file raylib.h
  * @author Forairaaaaa
- * @brief 
+ * @brief Ref: https://www.raylib.com/cheatsheet/cheatsheet.html
  * @version 0.1
  * @date 2023-11-13
  * 
@@ -12,6 +12,7 @@
 #include "../../../hal/hal.h"
 #include "../../assets/theme/theme.h"
 #include "../../utils/system/ui/ui.h"
+#include <cstdint>
 
 
 // Vector2 type
@@ -72,4 +73,7 @@ void EndDrawing();
 void ClearBackground(uint32_t color);
 void DrawRectangle(int x, int y, int w, int h, uint32_t color);
 void DrawCircleV(Vector2 center, float r, uint32_t color);
+void DrawLineV(Vector2 startPos, Vector2 endPos, uint32_t color);
+void DrawLine(int startPosX, int startPosY, int endPosX, int endPosY, uint32_t color);
+void DrawRectangleV(Vector2 position, Vector2 size, uint32_t color);
 int GetRandomValue(int min, int max);

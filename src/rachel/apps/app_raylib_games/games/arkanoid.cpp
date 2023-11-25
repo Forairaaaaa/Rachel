@@ -63,7 +63,7 @@ namespace ARKANOID
     typedef struct Ball {
         Vector2 position;
         Vector2 speed;
-        int radius;
+        float radius;
         bool active;
     } Ball;
 
@@ -133,8 +133,6 @@ namespace ARKANOID
 
                 update_count = HAL::Millis();
             }
-
-
         }
     #endif
         // De-Initialization
@@ -157,12 +155,12 @@ namespace ARKANOID
         brickSize = (Vector2){ static_cast<float>(GetScreenWidth()) / BRICKS_PER_LINE, BRICK_HEIGHT };
 
         // Initialize player
-        player.position = (Vector2){ screenWidth/2, screenHeight*8/9 };
+        player.position = (Vector2){ (float)screenWidth/2, (float)screenHeight*8/9 };
         player.size = (Vector2){ PLAYER_WIDTH, PLAYER_HEIGHT };
         player.life = PLAYER_MAX_LIFE;
 
         // Initialize ball
-        ball.position = (Vector2){ screenWidth/2, player.position.y };
+        ball.position = (Vector2){ (float)screenWidth/2, player.position.y };
         ball.speed = (Vector2){ 0, 0 };
         ball.radius = BALL_RADIUS;
         ball.active = false;

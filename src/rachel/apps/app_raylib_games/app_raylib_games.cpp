@@ -50,6 +50,10 @@ void AppRaylibgames::onRunning()
 
     if (selected == 1)
         ARKANOID::main();
+    else if (selected == 2)
+        SNAKE::main();
+    else if (selected == 3)
+        TETRIS::main();
 
     destroyApp();
 }

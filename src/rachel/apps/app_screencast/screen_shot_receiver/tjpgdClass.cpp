@@ -1,3 +1,4 @@
+#ifdef ESP_PLATFORM
 /*----------------------------------------------------------------------------/
 / TJpgDec - Tiny JPEG Decompressor R0.01c                     (C)ChaN, 2019
 /-----------------------------------------------------------------------------/
@@ -1045,5 +1046,4 @@ TJpgD::JRESULT TJpgD::decomp_multitask (
 	} while ((y += my) < height);
 	return rc;
 }
-
-
+#endif

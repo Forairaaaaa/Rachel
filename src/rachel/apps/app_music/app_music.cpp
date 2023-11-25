@@ -14,9 +14,11 @@
 #include "../assets/theme/theme.h"
 #include "../utils/system/ui/ui.h"
 #include "../utils/system/audio/audio.h"
+#ifdef ESP_PLATFORM
 #include <Arduino.h>
 #include <FS.h>
 #include <SD.h>
+#endif
 
 
 using namespace MOONCAKE::APPS;
@@ -36,6 +38,7 @@ void AppMusic::onResume()
 }
 
 
+#ifdef ESP_PLATFORM
 static const String _music_path = "/buzz_music";
 
 void AppMusic::onRunning()
@@ -107,6 +110,14 @@ void AppMusic::onRunning()
 
     destroyApp();
 }
+#else
+
+void AppMusic::onRunning()
+{
+    HAL::PopFatalError("懒得抽象了");
+}
+
+#endif
 
 
 void AppMusic::onDestroy()

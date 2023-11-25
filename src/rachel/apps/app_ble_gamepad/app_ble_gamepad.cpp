@@ -12,7 +12,9 @@
 #include "spdlog/spdlog.h"
 #include "../../hal/hal.h"
 #include "../assets/theme/theme.h"
+#ifdef ESP_PLATFORM
 #include <BleGamepad.h>
+#endif
 
 
 using namespace MOONCAKE::APPS;
@@ -32,6 +34,7 @@ void AppBle_gamepad::onResume()
 
 void AppBle_gamepad::onRunning()
 {
+#ifdef ESP_PLATFORM
     HAL::LoadTextFont24();
     HAL::GetCanvas()->fillScreen(THEME_COLOR_DARK);
     HAL::GetCanvas()->setTextColor(THEME_COLOR_LIGHT, THEME_COLOR_DARK);
@@ -124,6 +127,9 @@ void AppBle_gamepad::onRunning()
     delete ble_gamepad;
     HAL::GetCanvas()->createSprite(HAL::GetDisplay()->width(), HAL::GetDisplay()->height());
     destroyApp();
+#else
+    HAL::PopFatalError("懒得抽象了");
+#endif
 }
 
 

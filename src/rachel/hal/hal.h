@@ -26,12 +26,12 @@
 #endif
 
 
-/**
- * @brief Game pad button enum 
- * 
- */
 namespace GAMEPAD 
 {
+    /**
+     * @brief Game pad buttons enum 
+     * 
+     */
     enum GamePadButton_t
     {
         BTN_START = 0,
@@ -52,6 +52,10 @@ namespace GAMEPAD
 
 namespace CONFIG
 {
+    /**
+     * @brief System config 
+     * 
+     */
     struct SystemConfig_t
     {
         uint8_t brightness = 127;
@@ -60,12 +64,12 @@ namespace CONFIG
 }
 
 
-/**
- * @brief IMU data 
- * 
- */
 namespace IMU
 {
+    /**
+     * @brief IMU data 
+     * 
+     */
     struct ImuData_t
     {
         float accelX;
@@ -88,14 +92,14 @@ private:
 
 public:
     /**
-     * @brief Get HAL pointer 
+     * @brief Get HAL pointer, 获取HAL实例
      * 
      * @return HAL* 
      */
     static HAL* Get();
 
     /**
-     * @brief Check if HAL is valid 
+     * @brief Check if HAL is valid, 检测HAL是否有效
      * 
      * @return true 
      * @return false 
@@ -103,7 +107,7 @@ public:
     static bool Check();
 
     /**
-     * @brief HAL injection, init() will be called here  
+     * @brief HAL injection, init() will be called here, HAL注入
      * 
      * @param hal 
      * @return true 
@@ -112,7 +116,7 @@ public:
     static bool Inject(HAL* hal);
 
     /**
-     * @brief Destroy HAL and free memory 
+     * @brief Destroy HAL and free memory, 销毁释放HAL 
      * 
      */
     static void Destroy();
@@ -152,121 +156,230 @@ protected:
      */
 public:
     /**
-     * @brief Display device 
+     * @brief Display device, 获取屏幕驱动实例
      * 
      * @return LGFX_Device* 
      */
     static LGFX_Device* GetDisplay() { return Get()->_display; }
 
     /**
-     * @brief Full screen canvas (sprite)
+     * @brief Full screen canvas (sprite), 获取全屏Buffer实例
      * 
      * @return LGFX_SpriteFx* 
      */
     static LGFX_SpriteFx* GetCanvas() { return Get()->_canvas; }
 
 public:
+    ///
+    /// System APIs
+    ///
+
     /**
-     * @brief System APIs
+     * @brief Delay(ms), 延时(毫秒)
      * 
+     * @param milliseconds 
      */
     static void Delay(unsigned long milliseconds) { Get()->delay(milliseconds); }
     virtual void delay(unsigned long milliseconds) { lgfx::delay(milliseconds); }
     
+    /**
+     * @brief Get the number of milliseconds passed since boot, 获取系统运行毫秒数
+     * 
+     * @return unsigned long 
+     */
     static unsigned long Millis() { return Get()->millis(); }
     virtual unsigned long millis() { return lgfx::millis(); }
 
+    /**
+     * @brief Power off, 关机
+     * 
+     */
     static void PowerOff() { Get()->powerOff(); }
     virtual void powerOff() {}
 
+    /**
+     * @brief Reboot, 重启 
+     * 
+     */
     static void Reboot() { Get()->reboot(); }
     virtual void reboot() {}
 
-    // Set time to RTC 
+    /**
+     * @brief Set RTC time, 设置RTC时间
+     * 
+     * @param dateTime 
+     */
     static void SetSystemTime(tm dateTime) { return Get()->setSystemTime(dateTime); }
     virtual void setSystemTime(tm dateTime) {}
 
+    /**
+     * @brief Get local time(wrap of localtime()), 获取当前时间
+     * 
+     * @return tm* 
+     */
     static tm* GetLocalTime() { return Get()->getLocalTime(); }
     virtual tm* getLocalTime();
 
+    /**
+     * @brief Update IMU data, 刷新IMU数据
+     * 
+     */
     static void UpdateImuData() { Get()->updateImuData(); }
     virtual void updateImuData() {}
 
+    /**
+     * @brief Get the Imu Data, 获取IMU数据
+     * 
+     * @return IMU::ImuData_t& 
+     */
     static IMU::ImuData_t& GetImuData() { return Get()->getImuData(); }
     IMU::ImuData_t& getImuData() { return _imu_data; }
 
+    /**
+     * @brief Buzzer beep, 蜂鸣器开始哔哔
+     * 
+     * @param frequency 
+     * @param duration 
+     */
     static void Beep(float frequency, uint32_t duration = 4294967295U) { Get()->beep(frequency, duration); }
     virtual void beep(float frequency, uint32_t duration) {}
 
+    /**
+     * @brief Stop buzzer beep, 蜂鸣器别叫了 
+     * 
+     */
     static void BeepStop() { Get()->beepStop(); }
     virtual void beepStop() {}
-
-    static void SetBeepVolume(uint8_t volume) { Get()->setBeepVolume(volume); }
-    virtual void setBeepVolume(uint8_t volume) {}
-
+    
+    /**
+     * @brief Set the Beep Volume 
+     * 
+     * @param volume 
+     */
+    [[deprecated("no speaker")]]static void SetBeepVolume(uint8_t volume) { Get()->setBeepVolume(volume); }
+    [[deprecated("no speaker")]]virtual void setBeepVolume(uint8_t volume) {}
+    
+    /**
+     * @brief Check if sd card is valid, 检查SD卡是否可用
+     * 
+     * @return true 
+     * @return false 
+     */
     static bool CheckSdCard() { return Get()->checkSdCard(); }
     virtual bool checkSdCard() { return _is_sd_card_ready; }
 
+    ///
+    /// Display APIs
+    ///
 
     /**
-     * @brief Display APIs 
+     * @brief Push framebuffer, 推送framebuffer到显示屏 
      * 
      */
-    // Push frame buffer 
     static void CanvasUpdate() { Get()->canvasUpdate(); }
     virtual void canvasUpdate() { GetCanvas()->pushSprite(0, 0); }
 
+    /**
+     * @brief Render fps panel, 渲染FPS面板 
+     * 
+     */
     static void RenderFpsPanel() { Get()->renderFpsPanel(); }
     virtual void renderFpsPanel();
 
-    // Pop error message and wait reboot or power off 
+    /**
+     * @brief Pop error message and wait reboot, 优雅地抛个蓝屏  
+     * 
+     * @param msg 
+     */
     static void PopFatalError(std::string msg) { Get()->popFatalError(msg); }
     virtual void popFatalError(std::string msg);
     
+    ///
+    /// File system APIs 
+    ///
 
     /**
-     * @brief File system APIs 
-     * 
+     * @brief Load 24px height text font from SD card(slower render), 从SD卡导入24px高文本字体(渲染很慢)
+     * Path: /fonts/font_text_24.vlw
+     * 路径: /fonts/font_text_24.vlw
      */
     static void LoadTextFont24() { Get()->loadTextFont24(); }
     virtual void loadTextFont24() {}
 
+    /**
+     * @brief Load 16px height text font from SD card(slower render), 从SD卡导入16px高文本字体(渲染很慢)
+     * Path: /fonts/font_text_16.vlw
+     * 路径: /fonts/font_text_16.vlw
+     */
     static void LoadTextFont16() { Get()->loadTextFont16(); }
     virtual void loadTextFont16() {}
 
+    /**
+     * @brief Load 24px height launcher font from flash(fast render), 从flash导入24px高启动器用字体(渲染很快)
+     * 
+     */
     static void LoadLauncherFont24() { Get()->loadLauncherFont24(); }
     virtual void loadLauncherFont24() {}
 
+    ///
+    /// Gamepad APIs 
+    /// 
 
     /**
-     * @brief Gamepad APIs 
+     * @brief Get button state, 获取按键状态 
      * 
+     * @param button 
+     * @return true Pressing, 按下 
+     * @return false Released, 松开 
      */
-    // Get button state, @true: Pressing @false: Released 
     static bool GetButton(GAMEPAD::GamePadButton_t button) { return Get()->getButton(button); }
     virtual bool getButton(GAMEPAD::GamePadButton_t button) { return false; }
 
+    /**
+     * @brief Get any button state, 获取任意按键状态 
+     * 
+     * @return true Pressing, 按下 
+     * @return false Released, 松开 
+     */
     static bool GetAnyButton() { return Get()->getAnyButton(); }
     virtual bool getAnyButton();
 
+    /// 
+    /// System config APIs 
+    ///
 
     /**
-     * @brief System config APIs 
+     * @brief Load system config from FS, 从内部FS导入系统配置  
      * 
      */
-    // Load system config from fs 
     static void LoadSystemConfig() { Get()->loadSystemConfig(); }
     virtual void loadSystemConfig() {}
 
-    // Save config to fs 
+    /**
+     * @brief Save system config to FS, 保存系统配置到内部FS
+     * 
+     */
     static void SaveSystemConfig() { Get()->saveSystemConfig(); }
     virtual void saveSystemConfig() {}
 
-    // System config setter getter 
+    /**
+     * @brief Get the System Config, 获取系统配置 
+     * 
+     * @return CONFIG::SystemConfig_t& 
+     */
     static CONFIG::SystemConfig_t& GetSystemConfig() { return Get()->_config; }
+
+    /**
+     * @brief Set the System Config, 设置系统配置 
+     * 
+     * @param cfg 
+     */
     static void SetSystemConfig(CONFIG::SystemConfig_t cfg) { Get()->_config = cfg; }
 
-    // Update device to the system config 
+    /**
+     * @brief Update device to the system config, 以系统配置刷新设备
+     * 
+     */
     static void UpdateSystemFromConfig() { Get()->updateSystemFromConfig(); }
     virtual void updateSystemFromConfig();
 };
