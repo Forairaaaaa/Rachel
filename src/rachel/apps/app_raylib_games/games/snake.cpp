@@ -66,16 +66,33 @@ namespace SNAKE
     static const int screenWidth = 240;
     static const int screenHeight = 240;
 
-    static int framesCounter = 0;
-    static bool gameOver = false;
-    static bool pause = false;
+    // static int framesCounter = 0;
+    // static bool gameOver = false;
+    // static bool pause = false;
 
-    static Food fruit = { 0 };
-    static Snake snake[SNAKE_LENGTH] = { 0 };
-    static Vector2 snakePosition[SNAKE_LENGTH] = { 0 };
-    static bool allowMove = false;
-    static Vector2 offset = { 0 };
-    static int counterTail = 0;
+    // static Food fruit = { 0 };
+    // static Snake snake[SNAKE_LENGTH] = { 0 };
+    // static Vector2 snakePosition[SNAKE_LENGTH] = { 0 };
+    // static bool allowMove = false;
+    // static Vector2 offset = { 0 };
+    // static int counterTail = 0;
+
+    struct Data_t
+    {
+        int framesCounter = 0;
+        bool gameOver = false;
+        bool pause = false;
+
+        Food fruit = { 0 };
+        Snake snake[SNAKE_LENGTH] = { 0 };
+        Vector2 snakePosition[SNAKE_LENGTH] = { 0 };
+        bool allowMove = false;
+        Vector2 offset = { 0 };
+        int counterTail = 0;
+    };
+    static Data_t* _data = nullptr;
+
+
 
     //------------------------------------------------------------------------------------
     // Module Functions Declaration (local)
@@ -91,6 +108,8 @@ namespace SNAKE
     //------------------------------------------------------------------------------------
     int main(void)
     {
+        _data = new Data_t;
+
         // Initialization (Note windowTitle is unused on Android)
         //---------------------------------------------------------
         InitWindow(screenWidth, screenHeight, "classic game: snake");
@@ -132,6 +151,8 @@ namespace SNAKE
         CloseWindow();        // Close window and OpenGL context
         //--------------------------------------------------------------------------------------
 
+        delete _data;
+
         return 0;
     }
 
@@ -142,40 +163,40 @@ namespace SNAKE
     // Initialize game variables
     void InitGame(void)
     {
-        framesCounter = 0;
-        gameOver = false;
-        pause = false;
+        _data->framesCounter = 0;
+        _data->gameOver = false;
+        _data->pause = false;
 
-        counterTail = 1;
-        allowMove = false;
+        _data->counterTail = 1;
+        _data->allowMove = false;
 
-        offset.x = screenWidth%SQUARE_SIZE;
-        offset.y = screenHeight%SQUARE_SIZE;
+        _data->offset.x = screenWidth%SQUARE_SIZE;
+        _data->offset.y = screenHeight%SQUARE_SIZE;
 
         for (int i = 0; i < SNAKE_LENGTH; i++)
         {
-            snake[i].position = (Vector2){ offset.x/2, offset.y/2 };
-            snake[i].size = (Vector2){ SQUARE_SIZE, SQUARE_SIZE };
-            snake[i].speed = (Vector2){ SQUARE_SIZE, 0 };
+            _data->snake[i].position = (Vector2){ _data->offset.x/2, _data->offset.y/2 };
+            _data->snake[i].size = (Vector2){ SQUARE_SIZE, SQUARE_SIZE };
+            _data->snake[i].speed = (Vector2){ SQUARE_SIZE, 0 };
 
-            if (i == 0) snake[i].color = DARKBLUE;
-            else snake[i].color = BLUE;
+            if (i == 0) _data->snake[i].color = DARKBLUE;
+            else _data->snake[i].color = BLUE;
         }
 
         for (int i = 0; i < SNAKE_LENGTH; i++)
         {
-            snakePosition[i] = (Vector2){ 0.0f, 0.0f };
+            _data->snakePosition[i] = (Vector2){ 0.0f, 0.0f };
         }
 
-        fruit.size = (Vector2){ SQUARE_SIZE, SQUARE_SIZE };
-        fruit.color = SKYBLUE;
-        fruit.active = false;
+        _data->fruit.size = (Vector2){ SQUARE_SIZE, SQUARE_SIZE };
+        _data->fruit.color = SKYBLUE;
+        _data->fruit.active = false;
     }
 
     // Update game (one frame)
     void UpdateGame(void)
     {
-        if (!gameOver)
+        if (!_data->gameOver)
         {
             // if (IsKeyPressed('P')) pause = !pause;
             if (HAL::GetButton(GAMEPAD::BTN_START))
@@ -183,94 +204,94 @@ namespace SNAKE
                 while (HAL::GetButton(GAMEPAD::BTN_START))
                     HAL::Delay(50);
 
-                pause = !pause;
+                _data->pause = !_data->pause;
             }
 
-            if (!pause)
+            if (!_data->pause)
             {
                 // Player control
                 // if (IsKeyPressed(KEY_RIGHT) && (snake[0].speed.x == 0) && allowMove)
-                if (HAL::GetButton(GAMEPAD::BTN_RIGHT) && (snake[0].speed.x == 0) && allowMove)
+                if (HAL::GetButton(GAMEPAD::BTN_RIGHT) && (_data->snake[0].speed.x == 0) && _data->allowMove)
                 {
-                    snake[0].speed = (Vector2){ SQUARE_SIZE, 0 };
-                    allowMove = false;
+                    _data->snake[0].speed = (Vector2){ SQUARE_SIZE, 0 };
+                    _data->allowMove = false;
                 }
                 // if (IsKeyPressed(KEY_LEFT) && (snake[0].speed.x == 0) && allowMove)
-                if (HAL::GetButton(GAMEPAD::BTN_LEFT) && (snake[0].speed.x == 0) && allowMove)
+                if (HAL::GetButton(GAMEPAD::BTN_LEFT) && (_data->snake[0].speed.x == 0) && _data->allowMove)
                 {
-                    snake[0].speed = (Vector2){ -SQUARE_SIZE, 0 };
-                    allowMove = false;
+                    _data->snake[0].speed = (Vector2){ -SQUARE_SIZE, 0 };
+                    _data->allowMove = false;
                 }
                 // if (IsKeyPressed(KEY_UP) && (snake[0].speed.y == 0) && allowMove)
-                if (HAL::GetButton(GAMEPAD::BTN_UP) && (snake[0].speed.y == 0) && allowMove)
+                if (HAL::GetButton(GAMEPAD::BTN_UP) && (_data->snake[0].speed.y == 0) && _data->allowMove)
                 {
-                    snake[0].speed = (Vector2){ 0, -SQUARE_SIZE };
-                    allowMove = false;
+                    _data->snake[0].speed = (Vector2){ 0, -SQUARE_SIZE };
+                    _data->allowMove = false;
                 }
                 // if (IsKeyPressed(KEY_DOWN) && (snake[0].speed.y == 0) && allowMove)
-                if (HAL::GetButton(GAMEPAD::BTN_DOWN) && (snake[0].speed.y == 0) && allowMove)
+                if (HAL::GetButton(GAMEPAD::BTN_DOWN) && (_data->snake[0].speed.y == 0) && _data->allowMove)
                 {
-                    snake[0].speed = (Vector2){ 0, SQUARE_SIZE };
-                    allowMove = false;
+                    _data->snake[0].speed = (Vector2){ 0, SQUARE_SIZE };
+                    _data->allowMove = false;
                 }
 
                 // Snake movement
-                for (int i = 0; i < counterTail; i++) snakePosition[i] = snake[i].position;
+                for (int i = 0; i < _data->counterTail; i++) _data->snakePosition[i] = _data->snake[i].position;
 
-                if ((framesCounter%5) == 0)
+                if ((_data->framesCounter%5) == 0)
                 {
-                    for (int i = 0; i < counterTail; i++)
+                    for (int i = 0; i < _data->counterTail; i++)
                     {
                         if (i == 0)
                         {
-                            snake[0].position.x += snake[0].speed.x;
-                            snake[0].position.y += snake[0].speed.y;
-                            allowMove = true;
+                            _data->snake[0].position.x += _data->snake[0].speed.x;
+                            _data->snake[0].position.y += _data->snake[0].speed.y;
+                            _data->allowMove = true;
                         }
-                        else snake[i].position = snakePosition[i-1];
+                        else _data->snake[i].position = _data->snakePosition[i-1];
                     }
                 }
 
                 // Wall behaviour
-                if (((snake[0].position.x) > (screenWidth - offset.x)) ||
-                    ((snake[0].position.y) > (screenHeight - offset.y)) ||
-                    (snake[0].position.x < 0) || (snake[0].position.y < 0))
+                if (((_data->snake[0].position.x) > (screenWidth - _data->offset.x)) ||
+                    ((_data->snake[0].position.y) > (screenHeight - _data->offset.y)) ||
+                    (_data->snake[0].position.x < 0) || (_data->snake[0].position.y < 0))
                 {
-                    gameOver = true;
+                    _data->gameOver = true;
                 }
 
                 // Collision with yourself
-                for (int i = 1; i < counterTail; i++)
+                for (int i = 1; i < _data->counterTail; i++)
                 {
-                    if ((snake[0].position.x == snake[i].position.x) && (snake[0].position.y == snake[i].position.y)) gameOver = true;
+                    if ((_data->snake[0].position.x == _data->snake[i].position.x) && (_data->snake[0].position.y == _data->snake[i].position.y)) _data->gameOver = true;
                 }
 
                 // Fruit position calculation
-                if (!fruit.active)
+                if (!_data->fruit.active)
                 {
-                    fruit.active = true;
-                    fruit.position = (Vector2){ GetRandomValue(0, (screenWidth/SQUARE_SIZE) - 1)*SQUARE_SIZE + offset.x/2, GetRandomValue(0, (screenHeight/SQUARE_SIZE) - 1)*SQUARE_SIZE + offset.y/2 };
+                    _data->fruit.active = true;
+                    _data->fruit.position = (Vector2){ GetRandomValue(0, (screenWidth/SQUARE_SIZE) - 1)*SQUARE_SIZE + _data->offset.x/2, GetRandomValue(0, (screenHeight/SQUARE_SIZE) - 1)*SQUARE_SIZE + _data->offset.y/2 };
 
-                    for (int i = 0; i < counterTail; i++)
+                    for (int i = 0; i < _data->counterTail; i++)
                     {
-                        while ((fruit.position.x == snake[i].position.x) && (fruit.position.y == snake[i].position.y))
+                        while ((_data->fruit.position.x == _data->snake[i].position.x) && (_data->fruit.position.y == _data->snake[i].position.y))
                         {
-                            fruit.position = (Vector2){ GetRandomValue(0, (screenWidth/SQUARE_SIZE) - 1)*SQUARE_SIZE + offset.x/2, GetRandomValue(0, (screenHeight/SQUARE_SIZE) - 1)*SQUARE_SIZE + offset.y/2 };
+                            _data->fruit.position = (Vector2){ GetRandomValue(0, (screenWidth/SQUARE_SIZE) - 1)*SQUARE_SIZE + _data->offset.x/2, GetRandomValue(0, (screenHeight/SQUARE_SIZE) - 1)*SQUARE_SIZE + _data->offset.y/2 };
                             i = 0;
                         }
                     }
                 }
 
                 // Collision
-                if ((snake[0].position.x < (fruit.position.x + fruit.size.x) && (snake[0].position.x + snake[0].size.x) > fruit.position.x) &&
-                    (snake[0].position.y < (fruit.position.y + fruit.size.y) && (snake[0].position.y + snake[0].size.y) > fruit.position.y))
+                if ((_data->snake[0].position.x < (_data->fruit.position.x + _data->fruit.size.x) && (_data->snake[0].position.x + _data->snake[0].size.x) > _data->fruit.position.x) &&
+                    (_data->snake[0].position.y < (_data->fruit.position.y + _data->fruit.size.y) && (_data->snake[0].position.y + _data->snake[0].size.y) > _data->fruit.position.y))
                 {
-                    snake[counterTail].position = snakePosition[counterTail - 1];
-                    counterTail += 1;
-                    fruit.active = false;
+                    _data->snake[_data->counterTail].position = _data->snakePosition[_data->counterTail - 1];
+                    _data->counterTail += 1;
+                    _data->fruit.active = false;
                 }
 
-                framesCounter++;
+                _data->framesCounter++;
             }
         }
         else
@@ -282,7 +303,7 @@ namespace SNAKE
                     HAL::Delay(50);
                 
                 InitGame();
-                gameOver = false;
+                _data->gameOver = false;
             }
         }
     }
@@ -294,27 +315,27 @@ namespace SNAKE
 
             ClearBackground(RAYWHITE);
 
-            if (!gameOver)
+            if (!_data->gameOver)
             {
                 // Draw grid lines
                 for (int i = 0; i < screenWidth/SQUARE_SIZE + 1; i++)
                 {
-                    DrawLineV((Vector2){SQUARE_SIZE*i + offset.x/2, offset.y/2}, (Vector2){SQUARE_SIZE*i + offset.x/2, screenHeight - offset.y/2}, LIGHTGRAY);
+                    DrawLineV((Vector2){SQUARE_SIZE*i + _data->offset.x/2, _data->offset.y/2}, (Vector2){SQUARE_SIZE*i + _data->offset.x/2, screenHeight - _data->offset.y/2}, LIGHTGRAY);
                 }
 
                 for (int i = 0; i < screenHeight/SQUARE_SIZE + 1; i++)
                 {
-                    DrawLineV((Vector2){offset.x/2, SQUARE_SIZE*i + offset.y/2}, (Vector2){screenWidth - offset.x/2, SQUARE_SIZE*i + offset.y/2}, LIGHTGRAY);
+                    DrawLineV((Vector2){_data->offset.x/2, SQUARE_SIZE*i + _data->offset.y/2}, (Vector2){screenWidth - _data->offset.x/2, SQUARE_SIZE*i + _data->offset.y/2}, LIGHTGRAY);
                 }
 
                 // Draw snake
-                for (int i = 0; i < counterTail; i++) DrawRectangleV(snake[i].position, snake[i].size, snake[i].color);
+                for (int i = 0; i < _data->counterTail; i++) DrawRectangleV(_data->snake[i].position, _data->snake[i].size, _data->snake[i].color);
 
                 // Draw fruit to pick
-                DrawRectangleV(fruit.position, fruit.size, fruit.color);
+                DrawRectangleV(_data->fruit.position, _data->fruit.size, _data->fruit.color);
 
                 // if (pause) DrawText("GAME PAUSED", screenWidth/2 - MeasureText("GAME PAUSED", 40)/2, screenHeight/2 - 40, 40, GRAY);
-                if (pause)
+                if (_data->pause)
                 {
                     HAL::GetCanvas()->setTextColor((uint32_t)GRAY);
                     HAL::GetCanvas()->drawCenterString("GAME PAUSED", 120, 76);

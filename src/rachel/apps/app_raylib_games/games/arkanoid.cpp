@@ -78,13 +78,25 @@ namespace ARKANOID
     static const int screenWidth = 240;
     static const int screenHeight = 240;
 
-    static bool gameOver = false;
-    static bool pause = false;
+    // static bool gameOver = false;
+    // static bool pause = false;
 
-    static Player player = { 0 };
-    static Ball ball = { 0 };
-    static Brick brick[LINES_OF_BRICKS][BRICKS_PER_LINE] = { 0 };
-    static Vector2 brickSize = { 0 };
+    // static Player player = { 0 };
+    // static Ball ball = { 0 };
+    // static Brick brick[LINES_OF_BRICKS][BRICKS_PER_LINE] = { 0 };
+    // static Vector2 brickSize = { 0 };
+
+    struct Data_t
+    {
+        bool gameOver = false;
+        bool pause = false;
+
+        Player player = { 0 };
+        Ball ball = { 0 };
+        Brick brick[LINES_OF_BRICKS][BRICKS_PER_LINE] = { 0 };
+        Vector2 brickSize = { 0 };
+    };
+    Data_t* _data = nullptr;
 
     //------------------------------------------------------------------------------------
     // Module Functions Declaration (local)
@@ -101,6 +113,8 @@ namespace ARKANOID
     //------------------------------------------------------------------------------------
     int main(void)
     {
+        _data = new Data_t;
+
         // Initialization (Note windowTitle is unused on Android)
         //---------------------------------------------------------
         InitWindow(screenWidth, screenHeight, "classic game: arkanoid");
@@ -142,6 +156,8 @@ namespace ARKANOID
         CloseWindow();        // Close window and OpenGL context
         //--------------------------------------------------------------------------------------
 
+        delete _data;
+
         return 0;
     }
 
@@ -152,18 +168,18 @@ namespace ARKANOID
     // Initialize game variables
     void InitGame(void)
     {
-        brickSize = (Vector2){ static_cast<float>(GetScreenWidth()) / BRICKS_PER_LINE, BRICK_HEIGHT };
+        _data->brickSize = (Vector2){ static_cast<float>(GetScreenWidth()) / BRICKS_PER_LINE, BRICK_HEIGHT };
 
         // Initialize player
-        player.position = (Vector2){ (float)screenWidth/2, (float)screenHeight*8/9 };
-        player.size = (Vector2){ PLAYER_WIDTH, PLAYER_HEIGHT };
-        player.life = PLAYER_MAX_LIFE;
+        _data->player.position = (Vector2){ (float)screenWidth/2, (float)screenHeight*8/9 };
+        _data->player.size = (Vector2){ PLAYER_WIDTH, PLAYER_HEIGHT };
+        _data->player.life = PLAYER_MAX_LIFE;
 
         // Initialize ball
-        ball.position = (Vector2){ (float)screenWidth/2, player.position.y };
-        ball.speed = (Vector2){ 0, 0 };
-        ball.radius = BALL_RADIUS;
-        ball.active = false;
+        _data->ball.position = (Vector2){ (float)screenWidth/2, _data->player.position.y };
+        _data->ball.speed = (Vector2){ 0, 0 };
+        _data->ball.radius = BALL_RADIUS;
+        _data->ball.active = false;
 
         // Initialize bricks
         int initialDownPosition = BRICK_INIT_Y_OFFSET;
@@ -172,8 +188,8 @@ namespace ARKANOID
         {
             for (int j = 0; j < BRICKS_PER_LINE; j++)
             {
-                brick[i][j].position = (Vector2){ j*brickSize.x + brickSize.x/2, i*brickSize.y + initialDownPosition };
-                brick[i][j].active = true;
+                _data->brick[i][j].position = (Vector2){ j*_data->brickSize.x + _data->brickSize.x/2, i*_data->brickSize.y + initialDownPosition };
+                _data->brick[i][j].active = true;
             }
         }
     }
@@ -181,7 +197,7 @@ namespace ARKANOID
     // Update game (one frame)
     void UpdateGame(void)
     {
-        if (!gameOver)
+        if (!_data->gameOver)
         {
             // if (IsKeyPressed('P')) pause = !pause;
             if (HAL::GetButton(GAMEPAD::BTN_START))
@@ -189,79 +205,79 @@ namespace ARKANOID
                 while (HAL::GetButton(GAMEPAD::BTN_START))
                     HAL::Delay(50);
 
-                pause = !pause;
+                _data->pause = !_data->pause;
             }
                 
 
-            if (!pause)
+            if (!_data->pause)
             {
                 // Player movement logic
                 // if (IsKeyDown(KEY_LEFT)) player.position.x -= 5;
                 if (HAL::GetButton(GAMEPAD::BTN_LEFT))
-                    player.position.x -= PLAYER_SPEED;
+                    _data->player.position.x -= PLAYER_SPEED;
 
-                if ((player.position.x - player.size.x/2) <= 0) player.position.x = player.size.x/2;
+                if ((_data->player.position.x - _data->player.size.x/2) <= 0) _data->player.position.x = _data->player.size.x/2;
 
                 // if (IsKeyDown(KEY_RIGHT)) player.position.x += 5;
                 if (HAL::GetButton(GAMEPAD::BTN_RIGHT))
-                    player.position.x += PLAYER_SPEED;
+                    _data->player.position.x += PLAYER_SPEED;
 
-                if ((player.position.x + player.size.x/2) >= screenWidth) player.position.x = screenWidth - player.size.x/2;
+                if ((_data->player.position.x + _data->player.size.x/2) >= screenWidth) _data->player.position.x = screenWidth - _data->player.size.x/2;
 
                 
                 
 
 
                 // Ball launching logic
-                if (!ball.active)
+                if (!_data->ball.active)
                 {
                     // if (IsKeyPressed(KEY_SPACE))
                     if (HAL::GetButton(GAMEPAD::BTN_A))
                     {
-                        ball.active = true;
-                        ball.speed = (Vector2){ 0, -5 };
+                        _data->ball.active = true;
+                        _data->ball.speed = (Vector2){ 0, -5 };
                     }
                 }
 
                 // Ball movement logic
-                if (ball.active)
+                if (_data->ball.active)
                 {
-                    ball.position.x += ball.speed.x;
-                    ball.position.y += ball.speed.y;
+                    _data->ball.position.x += _data->ball.speed.x;
+                    _data->ball.position.y += _data->ball.speed.y;
                 }
                 else
                 {
-                    ball.position = (Vector2){ player.position.x, player.position.y - BRICK_HEIGHT };
+                    _data->ball.position = (Vector2){ _data->player.position.x, _data->player.position.y - BRICK_HEIGHT };
                 }
 
                 // Collision logic: ball vs walls
-                if (((ball.position.x + ball.radius) >= screenWidth) || ((ball.position.x - ball.radius) <= 0))
+                if (((_data->ball.position.x + _data->ball.radius) >= screenWidth) || ((_data->ball.position.x - _data->ball.radius) <= 0))
                 {
-                    ball.speed.x *= -1;
+                    _data->ball.speed.x *= -1;
                     CollisionCallback();
                 } 
-                if ((ball.position.y - ball.radius) <= 0) 
+                if ((_data->ball.position.y - _data->ball.radius) <= 0) 
                 {
-                    ball.speed.y *= -1;
+                    _data->ball.speed.y *= -1;
                     CollisionCallback();
                 }
-                if ((ball.position.y + ball.radius) >= screenHeight)
+                if ((_data->ball.position.y + _data->ball.radius) >= screenHeight)
                 {
-                    ball.speed = (Vector2){ 0, 0 };
-                    ball.active = false;
+                    _data->ball.speed = (Vector2){ 0, 0 };
+                    _data->ball.active = false;
 
-                    player.life--;
+                    _data->player.life--;
                     CollisionCallback();
                 }
 
                 // Collision logic: ball vs player
-                if (CheckCollisionCircleRec(ball.position, ball.radius,
-                    (Rectangle){ player.position.x - player.size.x/2, player.position.y - player.size.y/2, player.size.x, player.size.y}))
+                if (CheckCollisionCircleRec(_data->ball.position, _data->ball.radius,
+                    (Rectangle){ _data->player.position.x - _data->player.size.x/2, _data->player.position.y - _data->player.size.y/2, _data->player.size.x, _data->player.size.y}))
                 {
-                    if (ball.speed.y > 0)
+                    if (_data->ball.speed.y > 0)
                     {
-                        ball.speed.y *= -1;
-                        ball.speed.x = (ball.position.x - player.position.x)/(player.size.x/2)*5;
+                        _data->ball.speed.y *= -1;
+                        _data->ball.speed.x = (_data->ball.position.x - _data->player.position.x)/(_data->player.size.x/2)*5;
                     }
 
                     CollisionCallback();
@@ -272,45 +288,45 @@ namespace ARKANOID
                 {
                     for (int j = 0; j < BRICKS_PER_LINE; j++)
                     {
-                        if (brick[i][j].active)
+                        if (_data->brick[i][j].active)
                         {
                             // Hit below
-                            if (((ball.position.y - ball.radius) <= (brick[i][j].position.y + brickSize.y/2)) &&
-                                ((ball.position.y - ball.radius) > (brick[i][j].position.y + brickSize.y/2 + ball.speed.y)) &&
-                                ((fabs(ball.position.x - brick[i][j].position.x)) < (brickSize.x/2 + ball.radius*2/3)) && (ball.speed.y < 0))
+                            if (((_data->ball.position.y - _data->ball.radius) <= (_data->brick[i][j].position.y + _data->brickSize.y/2)) &&
+                                ((_data->ball.position.y - _data->ball.radius) > (_data->brick[i][j].position.y + _data->brickSize.y/2 + _data->ball.speed.y)) &&
+                                ((fabs(_data->ball.position.x - _data->brick[i][j].position.x)) < (_data->brickSize.x/2 + _data->ball.radius*2/3)) && (_data->ball.speed.y < 0))
                             {
-                                brick[i][j].active = false;
-                                ball.speed.y *= -1;
+                                _data->brick[i][j].active = false;
+                                _data->ball.speed.y *= -1;
 
                                 CollisionCallback();
                             }
                             // Hit above
-                            else if (((ball.position.y + ball.radius) >= (brick[i][j].position.y - brickSize.y/2)) &&
-                                    ((ball.position.y + ball.radius) < (brick[i][j].position.y - brickSize.y/2 + ball.speed.y)) &&
-                                    ((fabs(ball.position.x - brick[i][j].position.x)) < (brickSize.x/2 + ball.radius*2/3)) && (ball.speed.y > 0))
+                            else if (((_data->ball.position.y + _data->ball.radius) >= (_data->brick[i][j].position.y - _data->brickSize.y/2)) &&
+                                    ((_data->ball.position.y + _data->ball.radius) < (_data->brick[i][j].position.y - _data->brickSize.y/2 + _data->ball.speed.y)) &&
+                                    ((fabs(_data->ball.position.x - _data->brick[i][j].position.x)) < (_data->brickSize.x/2 + _data->ball.radius*2/3)) && (_data->ball.speed.y > 0))
                             {
-                                brick[i][j].active = false;
-                                ball.speed.y *= -1;
+                                _data->brick[i][j].active = false;
+                                _data->ball.speed.y *= -1;
 
                                 CollisionCallback();
                             }
                             // Hit left
-                            else if (((ball.position.x + ball.radius) >= (brick[i][j].position.x - brickSize.x/2)) &&
-                                    ((ball.position.x + ball.radius) < (brick[i][j].position.x - brickSize.x/2 + ball.speed.x)) &&
-                                    ((fabs(ball.position.y - brick[i][j].position.y)) < (brickSize.y/2 + ball.radius*2/3)) && (ball.speed.x > 0))
+                            else if (((_data->ball.position.x + _data->ball.radius) >= (_data->brick[i][j].position.x - _data->brickSize.x/2)) &&
+                                    ((_data->ball.position.x + _data->ball.radius) < (_data->brick[i][j].position.x - _data->brickSize.x/2 + _data->ball.speed.x)) &&
+                                    ((fabs(_data->ball.position.y - _data->brick[i][j].position.y)) < (_data->brickSize.y/2 + _data->ball.radius*2/3)) && (_data->ball.speed.x > 0))
                             {
-                                brick[i][j].active = false;
-                                ball.speed.x *= -1;
+                                _data->brick[i][j].active = false;
+                                _data->ball.speed.x *= -1;
 
                                 CollisionCallback();
                             }
                             // Hit right
-                            else if (((ball.position.x - ball.radius) <= (brick[i][j].position.x + brickSize.x/2)) &&
-                                    ((ball.position.x - ball.radius) > (brick[i][j].position.x + brickSize.x/2 + ball.speed.x)) &&
-                                    ((fabs(ball.position.y - brick[i][j].position.y)) < (brickSize.y/2 + ball.radius*2/3)) && (ball.speed.x < 0))
+                            else if (((_data->ball.position.x - _data->ball.radius) <= (_data->brick[i][j].position.x + _data->brickSize.x/2)) &&
+                                    ((_data->ball.position.x - _data->ball.radius) > (_data->brick[i][j].position.x + _data->brickSize.x/2 + _data->ball.speed.x)) &&
+                                    ((fabs(_data->ball.position.y - _data->brick[i][j].position.y)) < (_data->brickSize.y/2 + _data->ball.radius*2/3)) && (_data->ball.speed.x < 0))
                             {
-                                brick[i][j].active = false;
-                                ball.speed.x *= -1;
+                                _data->brick[i][j].active = false;
+                                _data->ball.speed.x *= -1;
 
                                 CollisionCallback();
                             }
@@ -319,16 +335,16 @@ namespace ARKANOID
                 }
 
                 // Game over logic
-                if (player.life <= 0) gameOver = true;
+                if (_data->player.life <= 0) _data->gameOver = true;
                 else
                 {
-                    gameOver = true;
+                    _data->gameOver = true;
 
                     for (int i = 0; i < LINES_OF_BRICKS; i++)
                     {
                         for (int j = 0; j < BRICKS_PER_LINE; j++)
                         {
-                            if (brick[i][j].active) gameOver = false;
+                            if (_data->brick[i][j].active) _data->gameOver = false;
                         }
                     }
                 }
@@ -340,7 +356,7 @@ namespace ARKANOID
             if (HAL::GetButton(GAMEPAD::BTN_START))
             {
                 InitGame();
-                gameOver = false;
+                _data->gameOver = false;
             }
         }
     }
@@ -352,32 +368,32 @@ namespace ARKANOID
 
             ClearBackground(RAYWHITE);
 
-            if (!gameOver)
+            if (!_data->gameOver)
             {
                 // Draw player bar
-                DrawRectangle(player.position.x - player.size.x/2, player.position.y - player.size.y/2, player.size.x, player.size.y, BLACK);
+                DrawRectangle(_data->player.position.x - _data->player.size.x/2, _data->player.position.y - _data->player.size.y/2, _data->player.size.x, _data->player.size.y, BLACK);
 
                 // Draw player lives
-                for (int i = 0; i < player.life; i++) DrawRectangle(10 + 20*i, screenHeight - 10, 10, 5, LIGHTGRAY);
+                for (int i = 0; i < _data->player.life; i++) DrawRectangle(10 + 20*i, screenHeight - 10, 10, 5, LIGHTGRAY);
 
                 // Draw ball
-                DrawCircleV(ball.position, ball.radius, MAROON);
+                DrawCircleV(_data->ball.position, _data->ball.radius, MAROON);
 
                 // Draw bricks
                 for (int i = 0; i < LINES_OF_BRICKS; i++)
                 {
                     for (int j = 0; j < BRICKS_PER_LINE; j++)
                     {
-                        if (brick[i][j].active)
+                        if (_data->brick[i][j].active)
                         {
-                            if ((i + j) % 2 == 0) DrawRectangle(brick[i][j].position.x - brickSize.x/2, brick[i][j].position.y - brickSize.y/2, brickSize.x, brickSize.y, GRAY);
-                            else DrawRectangle(brick[i][j].position.x - brickSize.x/2, brick[i][j].position.y - brickSize.y/2, brickSize.x, brickSize.y, DARKGRAY);
+                            if ((i + j) % 2 == 0) DrawRectangle(_data->brick[i][j].position.x - _data->brickSize.x/2, _data->brick[i][j].position.y - _data->brickSize.y/2, _data->brickSize.x, _data->brickSize.y, GRAY);
+                            else DrawRectangle(_data->brick[i][j].position.x - _data->brickSize.x/2, _data->brick[i][j].position.y - _data->brickSize.y/2, _data->brickSize.x, _data->brickSize.y, DARKGRAY);
                         }
                     }
                 }
 
                 // if (pause) DrawText("GAME PAUSED", screenWidth/2 - MeasureText("GAME PAUSED", 40)/2, screenHeight/2 - 40, 40, GRAY);
-                if (pause)
+                if (_data->pause)
                 {
                     HAL::GetCanvas()->setTextColor((uint32_t)GRAY);
                     HAL::GetCanvas()->drawCenterString("GAME PAUSED", 120, 76);

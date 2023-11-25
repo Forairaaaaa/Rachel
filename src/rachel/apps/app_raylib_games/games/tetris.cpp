@@ -69,41 +69,68 @@ namespace TETRIS
     static const int screenWidth = 240;
     static const int screenHeight = 240;
 
-    static bool gameOver = false;
-    static bool pause = false;
+    // static bool gameOver = false;
+    // static bool pause = false;
 
-    // Matrices
-    static GridSquare grid [GRID_HORIZONTAL_SIZE][GRID_VERTICAL_SIZE];
-    static GridSquare piece [4][4];
-    static GridSquare incomingPiece [4][4];
+    // // Matrices
+    // static GridSquare grid [GRID_HORIZONTAL_SIZE][GRID_VERTICAL_SIZE];
+    // static GridSquare piece [4][4];
+    // static GridSquare incomingPiece [4][4];
 
-    // Theese variables keep track of the active piece position
-    static int piecePositionX = 0;
-    static int piecePositionY = 0;
+    // // Theese variables keep track of the active piece position
+    // static int piecePositionX = 0;
+    // static int piecePositionY = 0;
 
-    // Game parameters
-    static std::uint32_t fadingColor;
-    //static int fallingSpeed;           // In frames
+    // // Game parameters
+    // static std::uint32_t fadingColor;
+    // //static int fallingSpeed;           // In frames
 
-    static bool beginPlay = true;      // This var is only true at the begining of the game, used for the first matrix creations
-    static bool pieceActive = false;
-    static bool detection = false;
-    static bool lineToDelete = false;
+    // static bool beginPlay = true;      // This var is only true at the begining of the game, used for the first matrix creations
+    // static bool pieceActive = false;
+    // static bool detection = false;
+    // static bool lineToDelete = false;
 
-    // Statistics
-    static int level = 1;
-    static int lines = 0;
+    // // Statistics
+    // static int level = 1;
+    // static int lines = 0;
 
-    // Counters
-    static int gravityMovementCounter = 0;
-    static int lateralMovementCounter = 0;
-    static int turnMovementCounter = 0;
-    static int fastFallMovementCounter = 0;
+    // // Counters
+    // static int gravityMovementCounter = 0;
+    // static int lateralMovementCounter = 0;
+    // static int turnMovementCounter = 0;
+    // static int fastFallMovementCounter = 0;
 
-    static int fadeLineCounter = 0;
+    // static int fadeLineCounter = 0;
 
-    // Based on level
-    static int gravitySpeed = 30;
+    // // Based on level
+    // static int gravitySpeed = 30;
+
+
+    struct Data_t
+    {
+        bool gameOver = false;
+        bool pause = false;
+        GridSquare grid [GRID_HORIZONTAL_SIZE][GRID_VERTICAL_SIZE];
+        GridSquare piece [4][4];
+        GridSquare incomingPiece [4][4];
+        int piecePositionX = 0;
+        int piecePositionY = 0;
+        std::uint32_t fadingColor;
+        bool beginPlay = true;
+        bool pieceActive = false;
+        bool detection = false;
+        bool lineToDelete = false;
+        int level = 1;
+        int lines = 0;
+        int gravityMovementCounter = 0;
+        int lateralMovementCounter = 0;
+        int turnMovementCounter = 0;
+        int fastFallMovementCounter = 0;
+        int fadeLineCounter = 0;
+        int gravitySpeed = 30;
+    };
+    static Data_t* _data = nullptr;
+
 
     //------------------------------------------------------------------------------------
     // Module Functions Declaration (local)
@@ -129,6 +156,8 @@ namespace TETRIS
     //------------------------------------------------------------------------------------
     int main(void)
     {
+        _data = new Data_t;
+
         // Initialization (Note windowTitle is unused on Android)
         //---------------------------------------------------------
         InitWindow(screenWidth, screenHeight, "classic game: tetris");
@@ -170,6 +199,8 @@ namespace TETRIS
         CloseWindow();        // Close window and OpenGL context
         //--------------------------------------------------------------------------------------
 
+        delete _data;
+
         return 0;
     }
 
@@ -181,37 +212,37 @@ namespace TETRIS
     void InitGame(void)
     {
         // Initialize game statistics
-        level = 1;
-        lines = 0;
+        _data->level = 1;
+        _data->lines = 0;
 
-        fadingColor = GRAY;
+        _data->fadingColor = GRAY;
 
-        piecePositionX = 0;
-        piecePositionY = 0;
+        _data->piecePositionX = 0;
+        _data->piecePositionY = 0;
 
-        pause = false;
+        _data->pause = false;
 
-        beginPlay = true;
-        pieceActive = false;
-        detection = false;
-        lineToDelete = false;
+        _data->beginPlay = true;
+        _data->pieceActive = false;
+        _data->detection = false;
+        _data->lineToDelete = false;
 
         // Counters
-        gravityMovementCounter = 0;
-        lateralMovementCounter = 0;
-        turnMovementCounter = 0;
-        fastFallMovementCounter = 0;
+        _data->gravityMovementCounter = 0;
+        _data->lateralMovementCounter = 0;
+        _data->turnMovementCounter = 0;
+        _data->fastFallMovementCounter = 0;
 
-        fadeLineCounter = 0;
-        gravitySpeed = 30;
+        _data->fadeLineCounter = 0;
+        _data->gravitySpeed = 30;
 
         // Initialize grid matrices
         for (int i = 0; i < GRID_HORIZONTAL_SIZE; i++)
         {
             for (int j = 0; j < GRID_VERTICAL_SIZE; j++)
             {
-                if ((j == GRID_VERTICAL_SIZE - 1) || (i == 0) || (i == GRID_HORIZONTAL_SIZE - 1)) grid[i][j] = BLOCK;
-                else grid[i][j] = EMPTY;
+                if ((j == GRID_VERTICAL_SIZE - 1) || (i == 0) || (i == GRID_HORIZONTAL_SIZE - 1)) _data->grid[i][j] = BLOCK;
+                else _data->grid[i][j] = EMPTY;
             }
         }
 
@@ -220,7 +251,7 @@ namespace TETRIS
         {
             for (int j = 0; j< 4; j++)
             {
-                incomingPiece[i][j] = EMPTY;
+                _data->incomingPiece[i][j] = EMPTY;
             }
         }
     }
@@ -228,7 +259,7 @@ namespace TETRIS
     // Update game (one frame)
     void UpdateGame(void)
     {
-        if (!gameOver)
+        if (!_data->gameOver)
         {
             // if (IsKeyPressed('P')) pause = !pause;
             if (HAL::GetButton(GAMEPAD::BTN_START))
@@ -236,28 +267,28 @@ namespace TETRIS
                 while (HAL::GetButton(GAMEPAD::BTN_START))
                     HAL::Delay(50);
 
-                pause = !pause;
+                _data->pause = !_data->pause;
             }
 
-            if (!pause)
+            if (!_data->pause)
             {
-                if (!lineToDelete)
+                if (!_data->lineToDelete)
                 {
-                    if (!pieceActive)
+                    if (!_data->pieceActive)
                     {
                         // Get another piece
-                        pieceActive = Createpiece();
+                        _data->pieceActive = Createpiece();
 
                         // We leave a little time before starting the fast falling down
-                        fastFallMovementCounter = 0;
+                        _data->fastFallMovementCounter = 0;
                     }
                     else    // Piece falling
                     {
                         // Counters update
-                        fastFallMovementCounter++;
-                        gravityMovementCounter++;
-                        lateralMovementCounter++;
-                        turnMovementCounter++;
+                        _data->fastFallMovementCounter++;
+                        _data->gravityMovementCounter++;
+                        _data->lateralMovementCounter++;
+                        _data->turnMovementCounter++;
 
                         // We make sure to move if we've pressed the key this frame
                         // if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT)) lateralMovementCounter = LATERAL_SPEED;
@@ -266,42 +297,42 @@ namespace TETRIS
 
                         // if (IsKeyPressed(KEY_UP)) turnMovementCounter = TURNING_SPEED;
                         if (HAL::GetButton(GAMEPAD::BTN_UP)) 
-                            turnMovementCounter = TURNING_SPEED;
+                            _data->turnMovementCounter = TURNING_SPEED;
 
                         // Fall down
                         // if (IsKeyDown(KEY_DOWN) && (fastFallMovementCounter >= FAST_FALL_AWAIT_COUNTER))
-                        if (HAL::GetButton(GAMEPAD::BTN_DOWN) && (fastFallMovementCounter >= FAST_FALL_AWAIT_COUNTER))
+                        if (HAL::GetButton(GAMEPAD::BTN_DOWN) && (_data->fastFallMovementCounter >= FAST_FALL_AWAIT_COUNTER))
                         {
                             // We make sure the piece is going to fall this frame
-                            gravityMovementCounter += gravitySpeed;
+                            _data->gravityMovementCounter += _data->gravitySpeed;
                         }
 
-                        if (gravityMovementCounter >= gravitySpeed)
+                        if (_data->gravityMovementCounter >= _data->gravitySpeed)
                         {
                             // Basic falling movement
-                            CheckDetection(&detection);
+                            CheckDetection(&_data->detection);
 
                             // Check if the piece has collided with another piece or with the boundings
-                            ResolveFallingMovement(&detection, &pieceActive);
+                            ResolveFallingMovement(&_data->detection, &_data->pieceActive);
 
                             // Check if we fullfilled a line and if so, erase the line and pull down the the lines above
-                            CheckCompletion(&lineToDelete);
+                            CheckCompletion(&_data->lineToDelete);
 
-                            gravityMovementCounter = 0;
+                            _data->gravityMovementCounter = 0;
                         }
 
                         // Move laterally at player's will
-                        if (lateralMovementCounter >= LATERAL_SPEED)
+                        if (_data->lateralMovementCounter >= LATERAL_SPEED)
                         {
                             // Update the lateral movement and if success, reset the lateral counter
-                            if (!ResolveLateralMovement()) lateralMovementCounter = 0;
+                            if (!ResolveLateralMovement()) _data->lateralMovementCounter = 0;
                         }
 
                         // Turn the piece at player's will
-                        if (turnMovementCounter >= TURNING_SPEED)
+                        if (_data->turnMovementCounter >= TURNING_SPEED)
                         {
                             // Update the turning movement and reset the turning counter
-                            if (ResolveTurnMovement()) turnMovementCounter = 0;
+                            if (ResolveTurnMovement()) _data->turnMovementCounter = 0;
                         }
                     }
 
@@ -310,9 +341,9 @@ namespace TETRIS
                     {
                         for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
                         {
-                            if (grid[i][j] == FULL)
+                            if (_data->grid[i][j] == FULL)
                             {
-                                gameOver = true;
+                                _data->gameOver = true;
                             }
                         }
                     }
@@ -320,19 +351,19 @@ namespace TETRIS
                 else
                 {
                     // Animation when deleting lines
-                    fadeLineCounter++;
+                    _data->fadeLineCounter++;
 
-                    if (fadeLineCounter%8 < 4) fadingColor = MAROON;
-                    else fadingColor = GRAY;
+                    if (_data->fadeLineCounter%8 < 4) _data->fadingColor = MAROON;
+                    else _data->fadingColor = GRAY;
 
-                    if (fadeLineCounter >= FADING_TIME)
+                    if (_data->fadeLineCounter >= FADING_TIME)
                     {
                         int deletedLines = 0;
                         deletedLines = DeleteCompleteLines();
-                        fadeLineCounter = 0;
-                        lineToDelete = false;
+                        _data->fadeLineCounter = 0;
+                        _data->lineToDelete = false;
 
-                        lines += deletedLines;
+                        _data->lines += deletedLines;
                     }
                 }
             }
@@ -346,7 +377,7 @@ namespace TETRIS
                     HAL::Delay(50);
 
                 InitGame();
-                gameOver = false;
+                _data->gameOver = false;
             }
         }
     }
@@ -358,7 +389,7 @@ namespace TETRIS
 
             ClearBackground(RAYWHITE);
 
-            if (!gameOver)
+            if (!_data->gameOver)
             {
                 // Draw gameplay area
                 Vector2 offset;
@@ -375,7 +406,7 @@ namespace TETRIS
                     for (int i = 0; i < GRID_HORIZONTAL_SIZE; i++)
                     {
                         // Draw each square of the grid
-                        if (grid[i][j] == EMPTY)
+                        if (_data->grid[i][j] == EMPTY)
                         {
                             DrawLine(offset.x, offset.y, offset.x + SQUARE_SIZE, offset.y, LIGHTGRAY );
                             DrawLine(offset.x, offset.y, offset.x, offset.y + SQUARE_SIZE, LIGHTGRAY );
@@ -383,24 +414,24 @@ namespace TETRIS
                             DrawLine(offset.x, offset.y + SQUARE_SIZE, offset.x + SQUARE_SIZE, offset.y + SQUARE_SIZE, LIGHTGRAY );
                             offset.x += SQUARE_SIZE;
                         }
-                        else if (grid[i][j] == FULL)
+                        else if (_data->grid[i][j] == FULL)
                         {
                             DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, GRAY);
                             offset.x += SQUARE_SIZE;
                         }
-                        else if (grid[i][j] == MOVING)
+                        else if (_data->grid[i][j] == MOVING)
                         {
                             DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, DARKGRAY);
                             offset.x += SQUARE_SIZE;
                         }
-                        else if (grid[i][j] == BLOCK)
+                        else if (_data->grid[i][j] == BLOCK)
                         {
                             DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, LIGHTGRAY);
                             offset.x += SQUARE_SIZE;
                         }
-                        else if (grid[i][j] == FADING)
+                        else if (_data->grid[i][j] == FADING)
                         {
-                            DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, fadingColor);
+                            DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, _data->fadingColor);
                             offset.x += SQUARE_SIZE;
                         }
                     }
@@ -421,7 +452,7 @@ namespace TETRIS
                 {
                     for (int i = 0; i < 4; i++)
                     {
-                        if (incomingPiece[i][j] == EMPTY)
+                        if (_data->incomingPiece[i][j] == EMPTY)
                         {
                             DrawLine(offset.x, offset.y, offset.x + SQUARE_SIZE, offset.y, LIGHTGRAY );
                             DrawLine(offset.x, offset.y, offset.x, offset.y + SQUARE_SIZE, LIGHTGRAY );
@@ -429,7 +460,7 @@ namespace TETRIS
                             DrawLine(offset.x, offset.y + SQUARE_SIZE, offset.x + SQUARE_SIZE, offset.y + SQUARE_SIZE, LIGHTGRAY );
                             offset.x += SQUARE_SIZE;
                         }
-                        else if (incomingPiece[i][j] == MOVING)
+                        else if (_data->incomingPiece[i][j] == MOVING)
                         {
                             DrawRectangle(offset.x, offset.y, SQUARE_SIZE, SQUARE_SIZE, GRAY);
                             offset.x += SQUARE_SIZE;
@@ -447,11 +478,11 @@ namespace TETRIS
                 HAL::GetCanvas()->setCursor(168, 150);
                 HAL::GetCanvas()->printf("LINES");
                 HAL::GetCanvas()->setCursor(174, 180);
-                HAL::GetCanvas()->printf("%04d", lines);
+                HAL::GetCanvas()->printf("%04d", _data->lines);
 
 
                 // if (pause) DrawText("GAME PAUSED", screenWidth/2 - MeasureText("GAME PAUSED", 40)/2, screenHeight/2 - 40, 40, GRAY);
-                if (pause)
+                if (_data->pause)
                 {
                     HAL::GetCanvas()->setTextColor((uint32_t)GRAY);
                     HAL::GetCanvas()->drawCenterString("GAME PAUSED", 120, 76);
@@ -486,14 +517,14 @@ namespace TETRIS
     //--------------------------------------------------------------------------------------
     static bool Createpiece()
     {
-        piecePositionX = (int)((GRID_HORIZONTAL_SIZE - 4)/2);
-        piecePositionY = 0;
+        _data->piecePositionX = (int)((GRID_HORIZONTAL_SIZE - 4)/2);
+        _data->piecePositionY = 0;
 
         // If the game is starting and you are going to create the first piece, we create an extra one
-        if (beginPlay)
+        if (_data->beginPlay)
         {
             GetRandompiece();
-            beginPlay = false;
+            _data->beginPlay = false;
         }
 
         // We assign the incoming piece to the actual piece
@@ -501,7 +532,7 @@ namespace TETRIS
         {
             for (int j = 0; j< 4; j++)
             {
-                piece[i][j] = incomingPiece[i][j];
+                _data->piece[i][j] = _data->incomingPiece[i][j];
             }
         }
 
@@ -509,11 +540,11 @@ namespace TETRIS
         GetRandompiece();
 
         // Assign the piece to the grid
-        for (int i = piecePositionX; i < piecePositionX + 4; i++)
+        for (int i = _data->piecePositionX; i < _data->piecePositionX + 4; i++)
         {
             for (int j = 0; j < 4; j++)
             {
-                if (piece[i - (int)piecePositionX][j] == MOVING) grid[i][j] = MOVING;
+                if (_data->piece[i - (int)_data->piecePositionX][j] == MOVING) _data->grid[i][j] = MOVING;
             }
         }
 
@@ -528,19 +559,19 @@ namespace TETRIS
         {
             for (int j = 0; j < 4; j++)
             {
-                incomingPiece[i][j] = EMPTY;
+                _data->incomingPiece[i][j] = EMPTY;
             }
         }
 
         switch (random)
         {
-            case 0: { incomingPiece[1][1] = MOVING; incomingPiece[2][1] = MOVING; incomingPiece[1][2] = MOVING; incomingPiece[2][2] = MOVING; } break;    //Cube
-            case 1: { incomingPiece[1][0] = MOVING; incomingPiece[1][1] = MOVING; incomingPiece[1][2] = MOVING; incomingPiece[2][2] = MOVING; } break;    //L
-            case 2: { incomingPiece[1][2] = MOVING; incomingPiece[2][0] = MOVING; incomingPiece[2][1] = MOVING; incomingPiece[2][2] = MOVING; } break;    //L inversa
-            case 3: { incomingPiece[0][1] = MOVING; incomingPiece[1][1] = MOVING; incomingPiece[2][1] = MOVING; incomingPiece[3][1] = MOVING; } break;    //Recta
-            case 4: { incomingPiece[1][0] = MOVING; incomingPiece[1][1] = MOVING; incomingPiece[1][2] = MOVING; incomingPiece[2][1] = MOVING; } break;    //Creu tallada
-            case 5: { incomingPiece[1][1] = MOVING; incomingPiece[2][1] = MOVING; incomingPiece[2][2] = MOVING; incomingPiece[3][2] = MOVING; } break;    //S
-            case 6: { incomingPiece[1][2] = MOVING; incomingPiece[2][2] = MOVING; incomingPiece[2][1] = MOVING; incomingPiece[3][1] = MOVING; } break;    //S inversa
+            case 0: { _data->incomingPiece[1][1] = MOVING; _data->incomingPiece[2][1] = MOVING; _data->incomingPiece[1][2] = MOVING; _data->incomingPiece[2][2] = MOVING; } break;    //Cube
+            case 1: { _data->incomingPiece[1][0] = MOVING; _data->incomingPiece[1][1] = MOVING; _data->incomingPiece[1][2] = MOVING; _data->incomingPiece[2][2] = MOVING; } break;    //L
+            case 2: { _data->incomingPiece[1][2] = MOVING; _data->incomingPiece[2][0] = MOVING; _data->incomingPiece[2][1] = MOVING; _data->incomingPiece[2][2] = MOVING; } break;    //L inversa
+            case 3: { _data->incomingPiece[0][1] = MOVING; _data->incomingPiece[1][1] = MOVING; _data->incomingPiece[2][1] = MOVING; _data->incomingPiece[3][1] = MOVING; } break;    //Recta
+            case 4: { _data->incomingPiece[1][0] = MOVING; _data->incomingPiece[1][1] = MOVING; _data->incomingPiece[1][2] = MOVING; _data->incomingPiece[2][1] = MOVING; } break;    //Creu tallada
+            case 5: { _data->incomingPiece[1][1] = MOVING; _data->incomingPiece[2][1] = MOVING; _data->incomingPiece[2][2] = MOVING; _data->incomingPiece[3][2] = MOVING; } break;    //S
+            case 6: { _data->incomingPiece[1][2] = MOVING; _data->incomingPiece[2][2] = MOVING; _data->incomingPiece[2][1] = MOVING; _data->incomingPiece[3][1] = MOVING; } break;    //S inversa
         }
     }
 
@@ -553,9 +584,9 @@ namespace TETRIS
             {
                 for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
                 {
-                    if (grid[i][j] == MOVING)
+                    if (_data->grid[i][j] == MOVING)
                     {
-                        grid[i][j] = FULL;
+                        _data->grid[i][j] = FULL;
                         *detection = false;
                         *pieceActive = false;
                     }
@@ -568,15 +599,15 @@ namespace TETRIS
             {
                 for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
                 {
-                    if (grid[i][j] == MOVING)
+                    if (_data->grid[i][j] == MOVING)
                     {
-                        grid[i][j+1] = MOVING;
-                        grid[i][j] = EMPTY;
+                        _data->grid[i][j+1] = MOVING;
+                        _data->grid[i][j] = EMPTY;
                     }
                 }
             }
 
-            piecePositionY++;
+            _data->piecePositionY++;
         }
     }
 
@@ -593,10 +624,10 @@ namespace TETRIS
             {
                 for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
                 {
-                    if (grid[i][j] == MOVING)
+                    if (_data->grid[i][j] == MOVING)
                     {
                         // Check if we are touching the left wall or we have a full square at the left
-                        if ((i-1 == 0) || (grid[i-1][j] == FULL)) collision = true;
+                        if ((i-1 == 0) || (_data->grid[i-1][j] == FULL)) collision = true;
                     }
                 }
             }
@@ -609,15 +640,15 @@ namespace TETRIS
                     for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)             // We check the matrix from left to right
                     {
                         // Move everything to the left
-                        if (grid[i][j] == MOVING)
+                        if (_data->grid[i][j] == MOVING)
                         {
-                            grid[i-1][j] = MOVING;
-                            grid[i][j] = EMPTY;
+                            _data->grid[i-1][j] = MOVING;
+                            _data->grid[i][j] = EMPTY;
                         }
                     }
                 }
 
-                piecePositionX--;
+                _data->piecePositionX--;
             }
         }
         // else if (IsKeyDown(KEY_RIGHT))  // Move right
@@ -628,10 +659,10 @@ namespace TETRIS
             {
                 for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
                 {
-                    if (grid[i][j] == MOVING)
+                    if (_data->grid[i][j] == MOVING)
                     {
                         // Check if we are touching the right wall or we have a full square at the right
-                        if ((i+1 == GRID_HORIZONTAL_SIZE - 1) || (grid[i+1][j] == FULL))
+                        if ((i+1 == GRID_HORIZONTAL_SIZE - 1) || (_data->grid[i+1][j] == FULL))
                         {
                             collision = true;
 
@@ -648,15 +679,15 @@ namespace TETRIS
                     for (int i = GRID_HORIZONTAL_SIZE - 1; i >= 1; i--)             // We check the matrix from right to left
                     {
                         // Move everything to the right
-                        if (grid[i][j] == MOVING)
+                        if (_data->grid[i][j] == MOVING)
                         {
-                            grid[i+1][j] = MOVING;
-                            grid[i][j] = EMPTY;
+                            _data->grid[i+1][j] = MOVING;
+                            _data->grid[i][j] = EMPTY;
                         }
                     }
                 }
 
-                piecePositionX++;
+                _data->piecePositionX++;
             }
         }
 
@@ -673,115 +704,115 @@ namespace TETRIS
             bool checker = false;
 
             // Check all turning possibilities
-            if ((grid[piecePositionX + 3][piecePositionY] == MOVING) &&
-                (grid[piecePositionX][piecePositionY] != EMPTY) &&
-                (grid[piecePositionX][piecePositionY] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX + 3][_data->piecePositionY] == MOVING) &&
+                (_data->grid[_data->piecePositionX][_data->piecePositionY] != EMPTY) &&
+                (_data->grid[_data->piecePositionX][_data->piecePositionY] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX + 3][piecePositionY + 3] == MOVING) &&
-                (grid[piecePositionX + 3][piecePositionY] != EMPTY) &&
-                (grid[piecePositionX + 3][piecePositionY] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX + 3][_data->piecePositionY + 3] == MOVING) &&
+                (_data->grid[_data->piecePositionX + 3][_data->piecePositionY] != EMPTY) &&
+                (_data->grid[_data->piecePositionX + 3][_data->piecePositionY] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX][piecePositionY + 3] == MOVING) &&
-                (grid[piecePositionX + 3][piecePositionY + 3] != EMPTY) &&
-                (grid[piecePositionX + 3][piecePositionY + 3] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX][_data->piecePositionY + 3] == MOVING) &&
+                (_data->grid[_data->piecePositionX + 3][_data->piecePositionY + 3] != EMPTY) &&
+                (_data->grid[_data->piecePositionX + 3][_data->piecePositionY + 3] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX][piecePositionY] == MOVING) &&
-                (grid[piecePositionX][piecePositionY + 3] != EMPTY) &&
-                (grid[piecePositionX][piecePositionY + 3] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX][_data->piecePositionY] == MOVING) &&
+                (_data->grid[_data->piecePositionX][_data->piecePositionY + 3] != EMPTY) &&
+                (_data->grid[_data->piecePositionX][_data->piecePositionY + 3] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX + 1][piecePositionY] == MOVING) &&
-                (grid[piecePositionX][piecePositionY + 2] != EMPTY) &&
-                (grid[piecePositionX][piecePositionY + 2] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX + 1][_data->piecePositionY] == MOVING) &&
+                (_data->grid[_data->piecePositionX][_data->piecePositionY + 2] != EMPTY) &&
+                (_data->grid[_data->piecePositionX][_data->piecePositionY + 2] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX + 3][piecePositionY + 1] == MOVING) &&
-                (grid[piecePositionX + 1][piecePositionY] != EMPTY) &&
-                (grid[piecePositionX + 1][piecePositionY] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX + 3][_data->piecePositionY + 1] == MOVING) &&
+                (_data->grid[_data->piecePositionX + 1][_data->piecePositionY] != EMPTY) &&
+                (_data->grid[_data->piecePositionX + 1][_data->piecePositionY] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX + 2][piecePositionY + 3] == MOVING) &&
-                (grid[piecePositionX + 3][piecePositionY + 1] != EMPTY) &&
-                (grid[piecePositionX + 3][piecePositionY + 1] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX + 2][_data->piecePositionY + 3] == MOVING) &&
+                (_data->grid[_data->piecePositionX + 3][_data->piecePositionY + 1] != EMPTY) &&
+                (_data->grid[_data->piecePositionX + 3][_data->piecePositionY + 1] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX][piecePositionY + 2] == MOVING) &&
-                (grid[piecePositionX + 2][piecePositionY + 3] != EMPTY) &&
-                (grid[piecePositionX + 2][piecePositionY + 3] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX][_data->piecePositionY + 2] == MOVING) &&
+                (_data->grid[_data->piecePositionX + 2][_data->piecePositionY + 3] != EMPTY) &&
+                (_data->grid[_data->piecePositionX + 2][_data->piecePositionY + 3] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX + 2][piecePositionY] == MOVING) &&
-                (grid[piecePositionX][piecePositionY + 1] != EMPTY) &&
-                (grid[piecePositionX][piecePositionY + 1] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX + 2][_data->piecePositionY] == MOVING) &&
+                (_data->grid[_data->piecePositionX][_data->piecePositionY + 1] != EMPTY) &&
+                (_data->grid[_data->piecePositionX][_data->piecePositionY + 1] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX + 3][piecePositionY + 2] == MOVING) &&
-                (grid[piecePositionX + 2][piecePositionY] != EMPTY) &&
-                (grid[piecePositionX + 2][piecePositionY] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX + 3][_data->piecePositionY + 2] == MOVING) &&
+                (_data->grid[_data->piecePositionX + 2][_data->piecePositionY] != EMPTY) &&
+                (_data->grid[_data->piecePositionX + 2][_data->piecePositionY] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX + 1][piecePositionY + 3] == MOVING) &&
-                (grid[piecePositionX + 3][piecePositionY + 2] != EMPTY) &&
-                (grid[piecePositionX + 3][piecePositionY + 2] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX + 1][_data->piecePositionY + 3] == MOVING) &&
+                (_data->grid[_data->piecePositionX + 3][_data->piecePositionY + 2] != EMPTY) &&
+                (_data->grid[_data->piecePositionX + 3][_data->piecePositionY + 2] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX][piecePositionY + 1] == MOVING) &&
-                (grid[piecePositionX + 1][piecePositionY + 3] != EMPTY) &&
-                (grid[piecePositionX + 1][piecePositionY + 3] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX][_data->piecePositionY + 1] == MOVING) &&
+                (_data->grid[_data->piecePositionX + 1][_data->piecePositionY + 3] != EMPTY) &&
+                (_data->grid[_data->piecePositionX + 1][_data->piecePositionY + 3] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX + 1][piecePositionY + 1] == MOVING) &&
-                (grid[piecePositionX + 1][piecePositionY + 2] != EMPTY) &&
-                (grid[piecePositionX + 1][piecePositionY + 2] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX + 1][_data->piecePositionY + 1] == MOVING) &&
+                (_data->grid[_data->piecePositionX + 1][_data->piecePositionY + 2] != EMPTY) &&
+                (_data->grid[_data->piecePositionX + 1][_data->piecePositionY + 2] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX + 2][piecePositionY + 1] == MOVING) &&
-                (grid[piecePositionX + 1][piecePositionY + 1] != EMPTY) &&
-                (grid[piecePositionX + 1][piecePositionY + 1] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX + 2][_data->piecePositionY + 1] == MOVING) &&
+                (_data->grid[_data->piecePositionX + 1][_data->piecePositionY + 1] != EMPTY) &&
+                (_data->grid[_data->piecePositionX + 1][_data->piecePositionY + 1] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX + 2][piecePositionY + 2] == MOVING) &&
-                (grid[piecePositionX + 2][piecePositionY + 1] != EMPTY) &&
-                (grid[piecePositionX + 2][piecePositionY + 1] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX + 2][_data->piecePositionY + 2] == MOVING) &&
+                (_data->grid[_data->piecePositionX + 2][_data->piecePositionY + 1] != EMPTY) &&
+                (_data->grid[_data->piecePositionX + 2][_data->piecePositionY + 1] != MOVING)) checker = true;
 
-            if ((grid[piecePositionX + 1][piecePositionY + 2] == MOVING) &&
-                (grid[piecePositionX + 2][piecePositionY + 2] != EMPTY) &&
-                (grid[piecePositionX + 2][piecePositionY + 2] != MOVING)) checker = true;
+            if ((_data->grid[_data->piecePositionX + 1][_data->piecePositionY + 2] == MOVING) &&
+                (_data->grid[_data->piecePositionX + 2][_data->piecePositionY + 2] != EMPTY) &&
+                (_data->grid[_data->piecePositionX + 2][_data->piecePositionY + 2] != MOVING)) checker = true;
 
             if (!checker)
             {
-                aux = piece[0][0];
-                piece[0][0] = piece[3][0];
-                piece[3][0] = piece[3][3];
-                piece[3][3] = piece[0][3];
-                piece[0][3] = aux;
+                aux = _data->piece[0][0];
+                _data->piece[0][0] = _data->piece[3][0];
+                _data->piece[3][0] = _data->piece[3][3];
+                _data->piece[3][3] = _data->piece[0][3];
+                _data->piece[0][3] = aux;
 
-                aux = piece[1][0];
-                piece[1][0] = piece[3][1];
-                piece[3][1] = piece[2][3];
-                piece[2][3] = piece[0][2];
-                piece[0][2] = aux;
+                aux = _data->piece[1][0];
+                _data->piece[1][0] = _data->piece[3][1];
+                _data->piece[3][1] = _data->piece[2][3];
+                _data->piece[2][3] = _data->piece[0][2];
+                _data->piece[0][2] = aux;
 
-                aux = piece[2][0];
-                piece[2][0] = piece[3][2];
-                piece[3][2] = piece[1][3];
-                piece[1][3] = piece[0][1];
-                piece[0][1] = aux;
+                aux = _data->piece[2][0];
+                _data->piece[2][0] = _data->piece[3][2];
+                _data->piece[3][2] = _data->piece[1][3];
+                _data->piece[1][3] = _data->piece[0][1];
+                _data->piece[0][1] = aux;
 
-                aux = piece[1][1];
-                piece[1][1] = piece[2][1];
-                piece[2][1] = piece[2][2];
-                piece[2][2] = piece[1][2];
-                piece[1][2] = aux;
+                aux = _data->piece[1][1];
+                _data->piece[1][1] = _data->piece[2][1];
+                _data->piece[2][1] = _data->piece[2][2];
+                _data->piece[2][2] = _data->piece[1][2];
+                _data->piece[1][2] = aux;
             }
 
             for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
             {
                 for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
                 {
-                    if (grid[i][j] == MOVING)
+                    if (_data->grid[i][j] == MOVING)
                     {
-                        grid[i][j] = EMPTY;
+                        _data->grid[i][j] = EMPTY;
                     }
                 }
             }
 
-            for (int i = piecePositionX; i < piecePositionX + 4; i++)
+            for (int i = _data->piecePositionX; i < _data->piecePositionX + 4; i++)
             {
-                for (int j = piecePositionY; j < piecePositionY + 4; j++)
+                for (int j = _data->piecePositionY; j < _data->piecePositionY + 4; j++)
                 {
-                    if (piece[i - piecePositionX][j - piecePositionY] == MOVING)
+                    if (_data->piece[i - _data->piecePositionX][j - _data->piecePositionY] == MOVING)
                     {
-                        grid[i][j] = MOVING;
+                        _data->grid[i][j] = MOVING;
                     }
                 }
             }
@@ -798,7 +829,7 @@ namespace TETRIS
         {
             for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
             {
-                if ((grid[i][j] == MOVING) && ((grid[i][j+1] == FULL) || (grid[i][j+1] == BLOCK))) *detection = true;
+                if ((_data->grid[i][j] == MOVING) && ((_data->grid[i][j+1] == FULL) || (_data->grid[i][j+1] == BLOCK))) *detection = true;
             }
         }
     }
@@ -813,7 +844,7 @@ namespace TETRIS
             for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
             {
                 // Count each square of the line
-                if (grid[i][j] == FULL)
+                if (_data->grid[i][j] == FULL)
                 {
                     calculator++;
                 }
@@ -828,7 +859,7 @@ namespace TETRIS
                     // Mark the completed line
                     for (int z = 1; z < GRID_HORIZONTAL_SIZE - 1; z++)
                     {
-                        grid[z][j] = FADING;
+                        _data->grid[z][j] = FADING;
                     }
                 }
             }
@@ -842,26 +873,26 @@ namespace TETRIS
         // Erase the completed line
         for (int j = GRID_VERTICAL_SIZE - 2; j >= 0; j--)
         {
-            while (grid[1][j] == FADING)
+            while (_data->grid[1][j] == FADING)
             {
                 for (int i = 1; i < GRID_HORIZONTAL_SIZE - 1; i++)
                 {
-                    grid[i][j] = EMPTY;
+                    _data->grid[i][j] = EMPTY;
                 }
 
                 for (int j2 = j-1; j2 >= 0; j2--)
                 {
                     for (int i2 = 1; i2 < GRID_HORIZONTAL_SIZE - 1; i2++)
                     {
-                        if (grid[i2][j2] == FULL)
+                        if (_data->grid[i2][j2] == FULL)
                         {
-                            grid[i2][j2+1] = FULL;
-                            grid[i2][j2] = EMPTY;
+                            _data->grid[i2][j2+1] = FULL;
+                            _data->grid[i2][j2] = EMPTY;
                         }
-                        else if (grid[i2][j2] == FADING)
+                        else if (_data->grid[i2][j2] == FADING)
                         {
-                            grid[i2][j2+1] = FADING;
-                            grid[i2][j2] = EMPTY;
+                            _data->grid[i2][j2+1] = FADING;
+                            _data->grid[i2][j2] = EMPTY;
                         }
                     }
                 }

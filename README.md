@@ -493,17 +493,17 @@ while (1)
 ```cpp
 inline void init() override
 {
-    _power_init();                    电源管理初始化
-    _disp_init();                     显示屏初始化
-    _gamepad_init();                  手柄按键初始化
-    _spk_init();                      扬声器(蜂鸣器)初始化
-    _i2c_init();                      I2C 初始化
-    _rtc_init();                      RTC 初始化
-    _imu_init();                      IMU 初始化
-    _fs_init();                       内部 Flash 文件系统初始化
-    _sdcard_init();                   SD 卡文件系统初始化
-    _system_config_init();            系统配置初始化
-    _sum_up();                        总结
+    _power_init();                    // 电源管理初始化
+    _disp_init();                     // 显示屏初始化
+    _gamepad_init();                  // 手柄按键初始化
+    _spk_init();                      // 扬声器(蜂鸣器)初始化
+    _i2c_init();                      // I2C 初始化
+    _rtc_init();                      // RTC 初始化
+    _imu_init();                      // IMU 初始化
+    _fs_init();                       // 内部 Flash 文件系统初始化
+    _sdcard_init();                   // SD 卡文件系统初始化
+    _system_config_init();            // 系统配置初始化
+    _sum_up();                        // 总结
 }
 ```
 
@@ -525,7 +525,7 @@ RachelSDK 的初始化在[这里](https://github.com/Forairaaaaa/rachel_sdk_simu
 ```cpp
 ...
 
-// 根据平台注入具体 HAL 实现
+// 根据平台注入具体 HAL 
 #ifndef ESP_PLATFORM
 HAL::Inject(new HAL_Simulator);
 #else
@@ -543,7 +543,7 @@ _mooncake->installApp(launcher);
 // 安装其他 App (设置、模拟器...)
 rachel_app_install_callback(_mooncake);
 
-// 启动启动器
+// 创建启动器
 _mooncake->createApp(launcher);
 
 ...
@@ -582,7 +582,7 @@ void Launcher::onCreate()
         
     // 允许后台运行
     setAllowBgRunning(true);
-    // 使能在创建后自动启动
+    // 允许创建后自动启动
     startApp();
     
     // 创建菜单(这个菜单就是安装了的 App 的列表的抽象, 后面渲染部分会详细讲)
