@@ -21,5 +21,5 @@ namespace SYSTEM::UI
      * @param progress 0~100
      * @param lightMode 
      */
-    void ProgressWindow(std::string title, uint8_t progress, bool lightMode = false);
+    void ProgressWindow(std::string title, uint8_t progress, bool lightMode = false, bool useCanvas = true);
 }

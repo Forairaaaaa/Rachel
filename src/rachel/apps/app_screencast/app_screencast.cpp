@@ -16,7 +16,7 @@
 
 // Not enough ram, enable this arduino wifi shit cause font loading from sd card filed 
 // push png filed, nofrendo load rom loading failed 
-#define ENABLE_APP_SCREENCAST   0
+#define ENABLE_APP_SCREENCAST   1
 
 #ifdef ESP_PLATFORM
 #if ENABLE_APP_SCREENCAST
@@ -50,7 +50,10 @@ void AppScreencast::onResume()
 void AppScreencast::onRunning()
 {
     #if ENABLE_APP_SCREENCAST
-    HAL::LoadTextFont24();
+
+    // :(
+    HAL::GetCanvas()->deleteSprite();
+    HAL::GetDisplay()->setFont(&fonts::efontCN_24);
 
     // 接続できるまで10秒待機
     spdlog::info("try connect wifi in nvs");
@@ -62,13 +65,12 @@ void AppScreencast::onRunning()
         if (HAL::GetButton(GAMEPAD::BTN_SELECT))
             HAL::Reboot();
         
-        ProgressWindow("尝试连接WiFi..", i);
-        HAL::CanvasUpdate();
+        ProgressWindow("尝试连接WiFi..", i, false, false);
     }
 
 
-    HAL::GetCanvas()->fillScreen(THEME_COLOR_DARK);
-    HAL::GetCanvas()->setTextColor(THEME_COLOR_LIGHT, THEME_COLOR_DARK);
+    HAL::GetDisplay()->fillScreen(THEME_COLOR_DARK);
+    HAL::GetDisplay()->setTextColor(THEME_COLOR_LIGHT, THEME_COLOR_DARK);
 
     // 接続できない場合はSmartConfigを起動
     // https://itunes.apple.com/app/id1071176700
@@ -79,8 +81,7 @@ void AppScreencast::onRunning()
         WiFi.mode(WIFI_MODE_APSTA);
         WiFi.beginSmartConfig();
 
-        HAL::GetCanvas()->drawCenterString("等待SmartConfig配网",  120, 120 - 48);
-        HAL::CanvasUpdate();
+        HAL::GetDisplay()->drawCenterString("等待SmartConfig配网",  120, 120 - 48);
         while (WiFi.status() != WL_CONNECTED) 
         {
             delay(100);
@@ -92,12 +93,11 @@ void AppScreencast::onRunning()
     }
 
 
-    HAL::GetCanvas()->fillScreen(THEME_COLOR_DARK);
-    HAL::GetCanvas()->drawCenterString("已连接",  120, 120 - 48);
+    HAL::GetDisplay()->fillScreen(THEME_COLOR_DARK);
+    HAL::GetDisplay()->drawCenterString("已连接",  120, 120 - 48);
     String ip = "IP: ";
     ip += WiFi.localIP().toString();
-    HAL::GetCanvas()->drawCenterString(ip.c_str(), 122, 120 - 12);
-    HAL::CanvasUpdate();
+    HAL::GetDisplay()->drawCenterString(ip.c_str(), 122, 120 - 12);
     
 
     auto recv = new TCPReceiver;
@@ -111,7 +111,9 @@ void AppScreencast::onRunning()
     delete recv;
     #endif
 
-
+    // :(
+    HAL::Reboot();
+    
     destroyApp();
 }
 #else
