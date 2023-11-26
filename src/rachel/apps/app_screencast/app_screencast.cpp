@@ -16,7 +16,7 @@
 
 // Not enough ram, enable this arduino wifi shit cause font loading from sd card filed 
 // push png filed, nofrendo load rom loading failed 
-#define ENABLE_APP_SCREENCAST   1
+#define ENABLE_APP_SCREENCAST   0
 
 #ifdef ESP_PLATFORM
 #if ENABLE_APP_SCREENCAST
@@ -109,10 +109,10 @@ void AppScreencast::onRunning()
                 HAL::Reboot();
     }
     delete recv;
-    #endif
 
     // :(
     HAL::Reboot();
+    #endif
 
     destroyApp();
 }

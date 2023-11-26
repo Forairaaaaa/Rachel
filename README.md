@@ -4,6 +4,22 @@
 
 ![](https://github.com/Forairaaaaa/rachel_sdk_simulator/blob/main/pics/cover_smaller.jpg?raw=true)
 
+
+
+# Rachel
+
+ESP32 迷你游戏机，很复古，什么也做不到（悲）
+
+项目目的：卖萌
+
+元件都是 `0603` 哦，铁板烧就能焊
+
+视频介绍：[https://www.bilibili.com/video/BV1Ga4y1f7d3/](https://www.bilibili.com/video/BV1Ga4y1f7d3/)
+
+硬件开源：[https://oshwhub.com/eedadada/mason](https://oshwhub.com/eedadada/mason)
+
+
+
 # Rachel SDK
 
 ## 编译
